@@ -34,7 +34,7 @@ end
 charCntr    = 1;
 varCntr     = 1;
 buff = ' ';
-var = zeros(numRow,numCol);
+var = zeros(numCol,numRow);
 
 %% Decode
 for i=1:numel(text)
@@ -49,6 +49,6 @@ for i=1:numel(text)
     end
 end
 var(varCntr) = str2double(buff);
-
+var = var';
 end
 
