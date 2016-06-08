@@ -1,5 +1,6 @@
 function [ out ] = UR5setSpeed(obj, speed)
-%UR5SETSPEED - Sets the speed given in percent of the maximum value. 
+%UR5setSpeed(obj, speed) - Sets the speed given in percent of the maximum 
+%   value. 
 %   Values between 0-120 are possible
 %
 %   Info:

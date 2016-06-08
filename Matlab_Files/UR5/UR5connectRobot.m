@@ -8,7 +8,7 @@ function [ obj ] = UR5connectRobot( IP, varargin )
 %   Last modified:  27.05.2016
 %   Change Log:
 %% Parameters
-max_time    =   2;
+max_time    =   10;
 time        =   0;
 DispOn      =   false;
 
