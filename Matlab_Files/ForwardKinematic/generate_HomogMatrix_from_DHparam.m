@@ -1,4 +1,4 @@
-function T = generate_HomogMatrix_from_DHparam(a,alpha,d,theta)
+function T = generate_HomogMatrix_from_DHparam(a,alphaDH,d,theta)
 % GENERATE_HOMOGMATRIX_FROM_DHPARAM generates homogenous transformation matrix from Denavit-Hartenberg parameters
 %
 %    Author: Nasser Attar
@@ -6,9 +6,13 @@ function T = generate_HomogMatrix_from_DHparam(a,alpha,d,theta)
 %    Modified: 2016-10-6
 %    Change Log:
 
-T = [cos(theta),-cos(alpha)*sin(theta),sin(alpha)*sin(theta),a*cos(theta);
-     sin(theta),cos(alpha)*cos(theta),-sin(alpha)*cos(theta),a*sin(theta);
-     0         ,sin(alpha)           ,cos(alpha)            ,d           ;
+if ~isscalar(a) || ~isscalar(alphaDH) || ~isscalar(d) || ~isscalar(theta)
+    error('\nInput arguments must be scalar\n')
+end
+
+T = [cos(theta),-cos(alphaDH)*sin(theta),sin(alphaDH)*sin(theta),a*cos(theta);
+     sin(theta),cos(alphaDH)*cos(theta),-sin(alphaDH)*cos(theta),a*sin(theta);
+     0         ,sin(alphaDH)           ,cos(alphaDH)            ,d           ;
      0         ,0                     ,0                    ,1            ];
 
 % End of function 
