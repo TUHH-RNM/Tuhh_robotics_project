@@ -1,4 +1,4 @@
-function [T,poseRPY] = UR5ForwardKinematics(theta,src,dest)
+function [T,poseRPY] = UR5ForwardKinematics(theta,from,to)
 % UR5FORWARDKINEMATICS computes the the HTM of the UR5 from the given joint angles theta
 %
 %    Author: Nasser Attar
@@ -14,7 +14,7 @@ end
 denavit_hartenberg_ur5
 
 T_Set = generate_BaseToRefFrameHMT_from_DHparam(a,alphaDH,d,theta);
-T = homogTrans_between_Frames(T_Set,src,dest);
+T = homogTrans_between_Frames(T_Set,from,to);
 poseRPY = poseRPY_from_HTM(T);
 
 % End of function
