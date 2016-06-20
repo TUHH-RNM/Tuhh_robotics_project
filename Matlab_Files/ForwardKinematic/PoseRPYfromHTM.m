@@ -1,4 +1,4 @@
-function poseRPY = poseRPY_from_HTM(T)
+function poseRPY = PoseRPYfromHTM(T,varargin)
 % POSERPY_FROM_HTM computes the position and orientation in RPY from HMT
 %
 %    Author: Nasser Attar

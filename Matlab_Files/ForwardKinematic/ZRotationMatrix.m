@@ -1,4 +1,4 @@
-function Rz = ZRotationMatrix(angle)
+function Rz = ZRotationMatrix(angle,varargin)
 % ZROTATIONMATRIX computes the elementary rotation matrix over the z-axis
 %
 %    Author: Nasser Attar

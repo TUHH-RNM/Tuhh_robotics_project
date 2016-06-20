@@ -1,4 +1,4 @@
-function T = generate_HomogMatrix_from_DHparam(a,alphaDH,d,theta)
+function T = HMTfromDHparam(a,alphaDH,d,theta,varargin)
 % GENERATE_HOMOGMATRIX_FROM_DHPARAM generates homogenous transformation matrix from Denavit-Hartenberg parameters
 %
 %    Author: Nasser Attar

@@ -1,4 +1,4 @@
-function T = HTM_from_poseRPY(poseRPY)
+function T = HTMfromPoseRPY(poseRPY,varargin)
 % HTM_FROM_POSERPY Computes the corresponding HTM from the given pose vector
 %
 %    Author: Nasser Attar

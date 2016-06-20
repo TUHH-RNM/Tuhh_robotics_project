@@ -1,4 +1,4 @@
-function T_Set = generate_BaseToRefFrameHMT_from_DHparam(a,alphaDH,d,theta)
+function T_Set = RefFrameToBaseHMTfromDHparam(a,alphaDH,d,theta,varargin)
 % GENERATE_BASETOREFFRAMEHMT_FROM_DHPARAM generates set of HTMs from DH-parameters
 %
 %    Author: Nasser Attar
@@ -14,7 +14,7 @@ nDHparam = numel(a);
 T_Set = zeros(4,4,nDHparam);
 T = eye(4);
 for i = 1:nDHparam
-    T = T*generate_HomogMatrix_from_DHparam(a(i),alphaDH(i),d(i),theta(i));
+    T = T*HMTfromDHparam(a(i),alphaDH(i),d(i),theta(i));
     T_Set(:,:,i) = T;
 end
 % End of function

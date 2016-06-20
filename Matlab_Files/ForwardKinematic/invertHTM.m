@@ -1,4 +1,4 @@
-function T_inv = invertHTM(T)
+function T_inv = invertHTM(T,varargin)
 % INVERTHTM inverts the homogenous transformation matrix T
 %
 %    Author: Nasser Attar

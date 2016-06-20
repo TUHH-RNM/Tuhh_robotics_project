@@ -1,4 +1,4 @@
-function [T,poseRPY] = UR5ForwardKinematics(theta,from,to)
+function [T,poseRPY] = UR5ForwardKinematics(theta,varargin)
 % UR5FORWARDKINEMATICS computes the the HTM of the UR5 from the given joint angles theta
 %
 %    Author: Nasser Attar
@@ -10,12 +10,20 @@ if numel(theta) ~= 6
     error('\nInput vector must contain 6 elements\n')
 end
 
-% Load DH-parameters
-denavit_hartenberg_ur5
+if nargin > 2
+    from = varargin{1};
+    to = varargin{2};
+else
+    from = 6;
+    to = 0;
+end
 
-T_Set = generate_BaseToRefFrameHMT_from_DHparam(a,alphaDH,d,theta);
-T = homogTrans_between_Frames(T_Set,from,to);
-poseRPY = poseRPY_from_HTM(T);
+% Load DH-parameters
+[a,alphaDH,d] = DenavitHartenbergUR5();
+
+T_Set = RefFrameToBaseHMTfromDHparam(a,alphaDH,d,theta);
+T = HMTbetweenFrames(T_Set,from,to);
+poseRPY = PoseRPYfromHTM(T);
 
 % End of function
 end

@@ -1,4 +1,4 @@
-function Ry = YRotationMatrix(angle)
+function Ry = YRotationMatrix(angle,varargin)
 % YROTATIONMATRIX computes the elementary rotation matrix over the y-axis
 %
 %    Author: Nasser Attar

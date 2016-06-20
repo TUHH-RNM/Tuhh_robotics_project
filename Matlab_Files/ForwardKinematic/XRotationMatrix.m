@@ -1,4 +1,4 @@
-function Rx = XRotationMatrix(angle)
+function Rx = XRotationMatrix(angle,varargin)
 % XROTATIONMATRIX computes the elementary rotation matrix over the x-axis
 %
 %    Author: Nasser Attar
