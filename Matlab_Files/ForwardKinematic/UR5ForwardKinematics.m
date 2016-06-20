@@ -1,5 +1,9 @@
-function [T,poseRPY] = UR5ForwardKinematics(theta,varargin)
-% UR5FORWARDKINEMATICS computes the the HTM of the UR5 from the given joint angles theta
+function [T,poseRPY,r] = UR5ForwardKinematics(theta,varargin)
+% UR5FORWARDKINEMATICS computes the different forward kinematics representations of the UR5 from the given joint angles theta
+%
+%    Info: theta must be an 6 element vector given in rad! T is the HMT, poseRPY is the
+%    position stacked with the RPY-angles and v is the rotation vector
+%    where the length is equal to the rotation matrix
 %
 %    Author: Nasser Attar
 %    Created: 2016-06-10
@@ -24,6 +28,7 @@ end
 T_Set = RefFrameToBaseHMTfromDHparam(a,alphaDH,d,theta);
 T = HMTbetweenFrames(T_Set,from,to);
 poseRPY = PoseRPYfromHTM(T);
+r = RotationVectorFromRM(T(1:3,1:3));
 
 % End of function
 end
