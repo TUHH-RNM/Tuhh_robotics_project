@@ -1,10 +1,7 @@
-function [ matricesOut ] = TRSforwardKinDenHart( angles, DenHartParameters, matrices)
+function [ matrixOut ] = TRSforwardKinDenHart( DenHartParameters, angles)
 % TRSforward - calculates the transformation matrix from the 
-% Denavit-Hartenberg-parameters and the given angles. The variable
-% matrices contains the numbers of the desired transformation matrices.
-% 
-% Example: matrices = 1 gives you the respective matrix: T01
-% matrices = [1 2] gives you the respective matrices: T01 and T12 
+% Denavit-Hartenberg-parameters and the given angle. 
+%
 %
 %   Info:
 %   Designed by:    Konstantin Stepanow
@@ -14,38 +11,27 @@ function [ matricesOut ] = TRSforwardKinDenHart( angles, DenHartParameters, matr
 
 %% Consistency check
 % Check if Den.-Hart.-table dimensions match the angle dimensions 
-if numel(angles) == numel(DenHartParameters(:,1)) && ...
-   numel(angles) == numel(DenHartParameters(:,2)) && ... 
-   numel(angles) == numel(DenHartParameters(:,3)) && ...
-   numel(angles) >= numel(matrices);
-else
-    msg = 'Den.-Hart.-parameters and angles dimensions mismatch!';
-    error(msg);
+if numel(angles)*3 > numel(DenHartParameters)
+    msg = 'Too many angles or not enough Den.-Hart.-parameters!';
+    error(msg);    
 end
 
-%% Assigning the incoming parameters 
-% Denavit-Hartenberg-parameters   
+%% Assigning the incoming parameters  
 a =     DenHartParameters(:,1); % vector of all as   
 alpha = DenHartParameters(:,2); % vector of all alphas
-d =     DenHartParameters(:,3); % vector of all ds  
+d =     DenHartParameters(:,3); % vector of all ds 
 
-% sines / cosines of the angles
-s =     sind(angles);           % vector of all sines of thetas
-c =     cosd(angles);           % vector of all cosines of thetas
-ca =    cosd(alpha);            % vector of all sines of alphas
-sa =    sind(alpha);            % vector of all cosine of alphas
+%% Assigning the variable angle
+theta = angles;
 
-% calculating the desired matrices according to the given 
-% vector (matrices)
-numberOfMatrices = length(matrices);
-matricesOut = zeros(4,4,numberOfMatrices); % prelocating memory
-for k=1:numberOfMatrices
-    i = matrices(k); %  i is the number of the k-th matrix
-    matricesOut(:,:,k) = ... 
-        [c(i)   -ca(i)*s(i)     sa(i)*s(i)          a(i)*c(i);
-         s(i)   ca(i)*c(i)      -sa(i)*c(i)         a(i)*s(i);
-         0      sa(i)           ca(i)               d(i);
-         0      0               0                   1];  
+matrixOut = eye(4,4);
+for i=1:numel(theta)
+%% Calculating the matrix
+matrixOut = matrixOut * ... 
+[cosd(theta(i))  -cosd(alpha(i))*sind(theta(i))    sind(alpha(i))*sind(theta(i))     a(i)*cosd(theta(i));
+ sind(theta(i))  cosd(alpha(i))*cosd(theta(i))     -sind(alpha(i))*cosd(theta(i))    a(i)*sind(theta(i));
+ 0               sind(alpha(i))                   cosd(alpha(i))                   d(i);
+ 0               0                                0                                1];
 end
 
 end
