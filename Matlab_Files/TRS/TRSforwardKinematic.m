@@ -3,7 +3,7 @@ function [ out ] = TRSforwardKinematic( phi )
 %   Long descriotion with examples if nessesary.
 %
 %   Info:
-%   Designed by:    Max Mustermann
+%   Designed by:    Mirko Schimkat
 %   Date created:   01.01.2016
 %   Last modified:  07.01.2016
 %   Change Log:
