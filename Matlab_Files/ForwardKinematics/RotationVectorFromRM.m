@@ -1,8 +1,6 @@
 function v = RotationVectorFromRM(R,varargin)
 % ROTATIONVECTORFROMHMT computes the corresponding rotation vector from the RotationMatrix R
 %
-%    Info: The rotation angle is the length of the vector v
-%
 %    Author: Nasser Attar
 %    Created: 2016-06-10
 %    Modified: 2016-06-10
