@@ -1,4 +1,7 @@
 %% Add folders
-addpath('UR5');
-addpath('TRS');
+addpath('Calibration');
+addpath('ForwardKinematics');
 addpath('KINECT');
+addpath('NetworkDevices');
+addpath('TRS');
+addpath('UR5');
