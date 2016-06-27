@@ -1,4 +1,4 @@
-The mat-file contains following variables:
+The mat-file 'transforms.mat' contains following variables:
 	'TrobAll': UR5 poses,
 	'TtrkAll': Marker geometry poses from Atracsys,
 	'TkinAll': Checkboard pose from Kinect,

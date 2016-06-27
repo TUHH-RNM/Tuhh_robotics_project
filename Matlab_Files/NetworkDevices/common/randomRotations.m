@@ -1,6 +1,11 @@
 function T = randomRotations(n, rollMin, rollMax, pitchMin, pitchMax, yawMin, yawMax)
-%RANDOMORIENTATION Summary of this function goes here
-%   Detailed explanation goes here
+% RANDOMROTATION outputs a random rotation matrix T within a specified range of RPY-angles
+%
+%   Author:  Unknown
+%   Date created:   Unknown
+%   Last modified:  27.06.16
+%   Change Log: 
+
 T = createArrays(n, [3,3]);
 
 phi = (rollMin-rollMax)*rand(n,1) + rollMax;
@@ -22,5 +27,7 @@ for i=1:n
     
     T{i} = Rzphi * Rytheta * Rxpsi;
 end
+
+% End of function
 end
 

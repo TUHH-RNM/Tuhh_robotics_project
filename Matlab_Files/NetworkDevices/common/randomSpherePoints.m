@@ -1,8 +1,6 @@
 function positions = randomSpherePoints(n,x,y,z,rRange,aRange,eRange)
 % RANDOMSPHEREPOSITIONS computes a set of random points in a sphere section with [x y z] as starting point
 %    The elevation and azimuth ranges must be given in rad
-
-% http://de.mathworks.com/help/matlab/math/numbers-placed-randomly-within-volume-of-sphere.html
 positions = createArrays(n, [3 1]);
 [aziOp,elOp,rOp] = cart2sph(x,y,z);
 aziOp = aziOp*ones(n,1);
@@ -19,6 +17,9 @@ radii = rOp + rRange(1) - (rRange(1) - rRange(2))*rand(n,1);
 for i=1:n
     positions{i} = [xs(i); ys(i); zs(i)];
 end
+
+% For more information consider looking at
+% http://de.mathworks.com/help/matlab/math/numbers-placed-randomly-within-volume-of-sphere.html
 
 % End of function
 end
