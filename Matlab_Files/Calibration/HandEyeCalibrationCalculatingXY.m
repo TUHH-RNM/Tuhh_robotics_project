@@ -4,7 +4,8 @@ function [X, Y] = HandEyeCalibrationCalculatingXY(M, N, varargin)
 % Aw = b and solving for w, where w contains the nx*(nx-1) and 
 % ny*(ny-1)values of the respectives matrices X and Y. 
 % w = [x11 -> x34, y11 -> y34]; M and N are arrays of the matrices
-% that contain the measurements.
+% that contain the measurements. This calibration method is described in
+% the paper of Ernst et al. This method is called 'QR24'
 %   
 %   Info:
 %   Designed by:    Konstantin Stepanow
@@ -16,13 +17,13 @@ function [X, Y] = HandEyeCalibrationCalculatingXY(M, N, varargin)
 sizeM = size(M);
 sizeN = size(N);
 
-numberM = sizeM(1,3);
-linesM = sizeM(1,1);
-columnsM = sizeM(1,2);
+linesM = sizeM(1);
+columnsM = sizeM(2);
+numberM = sizeM(3);
 
-numberN = sizeN(1,3);
-linesN = sizeN(1,1);
-columnsN = sizeN(1,2);
+linesN = sizeN(1);
+columnsN = sizeN(2);
+numberN = sizeN(3);
 
 if numberM ~= numberN
     msg = 'There are not as much matrices Mi as Ni';
