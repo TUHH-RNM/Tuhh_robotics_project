@@ -1,4 +1,4 @@
-function [X,Y] = HandEyeCalibrationQR24(robObj,n,varargin)
+function [X,Y] = HandEyeCalibrationProtoType(robObj,n,varargin)
 % HANDEYECALIBRATION returns a HMT denoting the transformation from marker frame to end effector frame
 %    The input trackObj must be an valid instance of the
 %    TrackingLuebeck-class
