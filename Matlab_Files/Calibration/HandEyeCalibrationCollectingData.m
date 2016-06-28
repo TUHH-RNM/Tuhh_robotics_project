@@ -13,7 +13,7 @@ function [ randomPose, trackedPose] = HandEyeCalibrationCollectingData(robObj, t
 %   Change Log:     27.06.2016: Outsourced some of the code to external
 %                               functions
 
-% Enable the pause function to wait for the robot
+%% Enable the pause function to wait for the robot
 pause('on');
 
 %% Load or define the initial angles
@@ -25,11 +25,11 @@ for i=1:numel(varargin)
     end
 end
 
-%% Bringing the robot into the initial pose
+%% Bring the robot into the initial pose
 % Set speed
 UR5setSpeed(robObj,robSpeed);
 
-% Bring the robot into the initial position. When the initial position was
+%% Bring the robot into the initial position. If the initial position was
 % not given as input, then move the robot to the default initial position.
 if ~isempty(initialAngles)
     UR5movePTPJoints(robObj,initialAngles);
@@ -53,7 +53,27 @@ initialPose = TRSforwardKinDenHart(DenHartParameters,initialAngles);
 initialPose(1:3,4) = initialPose(1:3,4)*1000;
 
 % Query the initial configuration
-initialConfig = UR5sendCommand(robObj,'GetStatus');s
+initialConfig = UR5sendCommand(robObj,'GetStatus');
+
+%% Check whether the maximum rotation angles and translation 
+% distances were given as input
+anglePM = [];
+XYZtransPM = [];
+for k = 1:numel(varargin)
+    if strcmp(varargin{k},'maxRotAngle')
+        anglePM = varargin{k+1};
+    elseif strcmp(varargin{k},'maxXYZtrans')
+        XYZtransPM = varargin{k+1};
+    end
+end
+
+% Set default maximum values for the rotation and translation
+if isempty(anglePM)
+    anglePM = 15;           % +- degree
+end
+if isempty(XYZtransPM)
+    XYZtransPM = 100;       % +- mm
+end
 
 %% Prelocate memory for the random poses
 randomPose  = zeros(4,4,1);
@@ -64,28 +84,8 @@ trackedPose = zeros(4,4,1);
 %% Calculate new random poses and bring the robot there
 for j=1:measurements
     
-    % Check whether the maximum rotation angles and translation distances
-    % were given as input
-    anglePM = [];
-    XYZtransPM = [];
-    for k = 1:numel(varargin)
-        if strcmp(varargin{k},'maxRotAngle')
-            anglePM = varargin{k+1};
-        elseif strcmp(varargin{k},'maxXYZtrans')
-            XYZtransPM = varargin{k+1};
-        end
-    end
-    
-    % maximum values for the rotation and translation
-    if isempty(anglePM)
-        anglePM = 15;           % +- degree
-    end
-    if isempty(XYZtransPM)
-        XYZtransPM = 100;       % +- mm
-    end
-    
     % Calculate the rotation matrix from the random angles
-    randomRot = randomRotations(measurements,-anglePM,anglePM,-anglePM,anglePM,-anglePM,anglePM);
+    randomRot = randomRotations(1,-anglePM,anglePM,-anglePM,anglePM,-anglePM,anglePM);
     
     % Calculate random translations
     xRand = XYZtransPM * (2*rand() - 1);
@@ -125,7 +125,8 @@ for j=1:measurements
     % randomAngles(j,1:6) = backAnglesSim;
     % randomConfig(j,1) = cellstr(config);
     
-    % Track pose
+    % Track the pose, if the markers are not visible, fill the matrix
+    % with NaN, otherwise save the robot pose and the tracked pose
     [T,visibility,~] = trackObj.getTransformMatrix;
     if ~visibility
         randomPose(:,:,j) = NaN*ones(4);
