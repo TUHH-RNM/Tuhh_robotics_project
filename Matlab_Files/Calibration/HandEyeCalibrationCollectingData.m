@@ -29,12 +29,13 @@ end
 % Set speed
 UR5setSpeed(robObj,robSpeed);
 
-%% Bring the robot into the initial position. If the initial position was
-% not given as input, then move the robot to the default initial position.
+%% Bring the robot into the initial position. 
+% If the initial position was
+% not given as input, then the robot stays in his current position.
 if ~isempty(initialAngles)
     UR5movePTPJoints(robObj,initialAngles);
 else
-    UR5moveToHomePosition(robObj);
+    initialAngles = UR5getPositionJoints(robObj);
 end
 
 % Wait until the joints don't change anymore (robot arrived)
@@ -86,6 +87,7 @@ for j=1:measurements
     
     % Calculate the rotation matrix from the random angles
     randomRot = randomRotations(1,-anglePM,anglePM,-anglePM,anglePM,-anglePM,anglePM);
+    randomRot = randomRot{1};
     
     % Calculate random translations
     xRand = XYZtransPM * (2*rand() - 1);
@@ -133,6 +135,10 @@ for j=1:measurements
         trackedPose(:,:,j) = NaN*ones(4);
     else
         randomPose(:,:,j) = [UR5getPositionHomRowWise(robObj);0 0 0 1];
+        % UR5getPositionHomRomWise gives out the position ( the first 3
+        % elements of the 4th column ) in meters, but in this case we need
+        % it in millimeters
+        randomPose(1:3,4,:) = randomPose(1:3,4,:)*1000;
         trackedPose(:,:,j) = T;
     end
     

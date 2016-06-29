@@ -35,6 +35,13 @@ if linesM ~= linesN || columnsM ~= columnsN
     error(msg); 
 end
 
+%% Remove all matrices which are marked as incorrect
+correctIndices = ~squeeze(isnan(M(1,1,:)));
+M = M(:,:,correctIndices);
+N = N(:,:,correctIndices);
+numberM = nnz(correctIndices);
+numberN = nnz(correctIndices); %#ok<NASGU>
+
 %% Calculating the matrices from the measurements
 % Building the matrix A and the vector b from the input matrices 
 % according to (MiX = YNi) => (Aw = b)
