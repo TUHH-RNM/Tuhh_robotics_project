@@ -28,6 +28,7 @@ scanArea        = [200 200];    % y x
 
 max_distance    = 2000;    
 thresh          = .9;
+roundVar        = false;
 
 %% Varargin
 for i=1:numel(varargin)
@@ -37,6 +38,8 @@ for i=1:numel(varargin)
         max_distance = varargin{i+1};
     elseif strcmp(varargin{i},'threshold')
         thresh = varargin{i+1};
+    elseif strcmp(varargin{i},'round')
+        roundVar = true;
     end
 end
 
@@ -100,5 +103,9 @@ for i=1:length(xp)
     pointsmm(i,2) = (yp(i)-Py)*Z3D(i)/my;
 end
 
-pointsmm(:,3) = Z3D';
+if roundVar
+    pointsmm(:,3) = round(Z3D');
+else
+    pointsmm(:,3) = Z3D';
+end
 end

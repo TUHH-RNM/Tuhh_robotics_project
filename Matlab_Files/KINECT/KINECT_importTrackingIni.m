@@ -20,10 +20,14 @@ startRow    = 1;
 endRow      = 19;
 doStruct    = false;
 
+roundVar    = false;
+
 %% Varargin
 for i=1:numel(varargin)
     if strcmp(varargin{i}, 'struct')
         doStruct = true;
+    elseif strcmp(varargin{i},'round')
+        roundVar = true;
     end
     
 end
@@ -97,6 +101,10 @@ else
     fiducials(4,1) = Datas{14,2};
     fiducials(4,2) = Datas{15,2};
     fiducials(4,3) = Datas{16,2};
+end
+
+if roundVar
+    fiducials = round(fiducials);
 end
     
 end

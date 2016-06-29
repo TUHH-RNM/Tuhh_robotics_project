@@ -10,6 +10,7 @@ function [ out ] = UR5getPositionHomRowWise( obj )
 receive = UR5sendCommand(obj,'GetPositionHomRowWise');
 out = UR5str2double(receive,'varCol',4,'varRow',3);
 out(:,4) = out(:,4) / 1000;
+out(4,:) = [0 0 0 1];
 
 end
 

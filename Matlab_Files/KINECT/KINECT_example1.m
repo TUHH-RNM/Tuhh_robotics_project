@@ -1,18 +1,19 @@
 % clc
-ploting = true;
+ploting = false;
 
 
 %% Load data
 load('KINECT\Snapshots\Snapshot1.mat');
 load('KINECT\@KinectImaq\IRKinectParams999999999999.mat')
-headPoint   = KINECT_importTrackingIni('KINECT/head.ini');
+headPoint   = KINECT_importTrackingIni('KINECT/head.ini','round');
 
 %% Run tracking
 pointsXY    = KINECT_trackFiducialPixel(imgIR,imgD);
-XYZ3D       = KINECT_trackFiducialmm( imgIR,imgD,cp );
+XYZ3D       = KINECT_trackFiducialmm( imgIR,imgD,cp ,'round');
 
+%% Plot head points
 if ploting
-    %% Plot head points
+    
     clf;
     subplot(2,2,1);
     title('Head points');
@@ -127,5 +128,7 @@ distance3D = sort(distance3D);
 %% Analyze
 difference = abs(distanceHead-distance3D);
 display([distanceHead;distance3D;difference]);
+
+
 
 min(difference)

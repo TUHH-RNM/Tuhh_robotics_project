@@ -6,3 +6,4 @@ addpath('NetworkDevices');
 addpath('TRS');
 addpath('UR5');
 addpath('ALG');
+addpath('MOC');
