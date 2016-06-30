@@ -25,8 +25,8 @@ minDist   = 3 ;
 [trcDist,trcPoints] = ALGdistancesBetweenFiducials(trcFiducials);
 
 %% Sort by lengths
-refSort	= sort(refDist);
-trcSort = sort(trcDist);
+[refSort,permVecRef]	= sort(refDist);
+[trcSort,permVecTrc] = sort(trcDist);
 
 %% Check if difference is bigger than allowed
 if(max(abs(refSort - trcSort)) > errorDist)
@@ -34,11 +34,8 @@ if(max(abs(refSort - trcSort)) > errorDist)
 end
 
 %% Combine
-ref	= [refDist     refPoints];
-trc = [trcDist trcPoints];
-
-ref	= sortrows(ref,1);
-trc = sortrows(trc,1);
+ref	= [refSort     refPoints(permVecRef,:)];
+trc = [trcDist trcPoints(permVecTrc,:)];
 
 refDifference = diff(ref(:,1)) < minDist;
 i=0;
