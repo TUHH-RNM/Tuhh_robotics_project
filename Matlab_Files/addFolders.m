@@ -7,3 +7,4 @@ addpath('TRS');
 addpath('UR5');
 addpath('ALG');
 addpath('MOC');
+addpath('COL');
