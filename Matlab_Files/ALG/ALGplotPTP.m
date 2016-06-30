@@ -1,8 +1,5 @@
-function ALGplotVec( Vector, varargin )
-%ALGplotVec - Plots a Vector, beginning at [0;0;0]
-%   
-%   This functions plots a vector into a 3D plot. The Vector must be given
-%   as a column vector. The endpoint is spezified by the Vector
+function ALGplotPTP( P1,P2, varargin )
+%ALGplotPTP - Plots a Line between Point 1 and Point 2 in 3D
 %
 %   You can spezifie the color by the standart matlab
 %   color code. 
@@ -19,13 +16,10 @@ function ALGplotVec( Vector, varargin )
 
 %% Predefined parameters
 color   =   'b';
-base    =   zeros(1,3);
 
 %% Varargin
 for i=1:numel(varargin)
-    if     strcmp(varargin{i}, 'base')
-        base = varargin{i+1};
-    elseif strcmp(varargin{i}, 'y')
+    if strcmp(varargin{i}, 'y')
         color = 'y';
     elseif strcmp(varargin{i}, 'm')
         color = 'm';
@@ -45,7 +39,7 @@ for i=1:numel(varargin)
 end
 
 %% Calculation
-plotVec = [base;Vector];
+plotVec = [P1;P2];
 x = plotVec(:,1);
 y = plotVec(:,2);
 z = plotVec(:,3);
