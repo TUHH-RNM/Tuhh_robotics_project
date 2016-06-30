@@ -20,55 +20,22 @@ minDist   = 3 ;
 % 4:    P2-P3
 % 5:    P2-P4
 % 6:    P3-P4
-cntr = 1;
-for i=1:3
-    x1 = refFiducials(i,1);
-    y1 = refFiducials(i,2);
-    z1 = refFiducials(i,3);
-    
-    for j=(i+1):4
-        x2 = refFiducials(j,1);
-        y2 = refFiducials(j,2);
-        z2 = refFiducials(j,3);
-        
-        refDist(cntr)     = ALGdistancePTP([x1 y1 z1], [x2 y2 z2]);
-        refPoints(cntr,:) = [i j];
-        cntr = cntr+1;
-    end
-end
 
-cntr = 1;
-for i=1:3
-    x1 = trcFiducials(i,1);
-    y1 = trcFiducials(i,2);
-    z1 = trcFiducials(i,3);
-    
-    for j=(i+1):4
-        x2 = trcFiducials(j,1);
-        y2 = trcFiducials(j,2);
-        z2 = trcFiducials(j,3);
-        
-        trcDist(cntr)       = ALGdistancePTP([x1 y1 z1], [x2 y2 z2]);
-        trcPoints(cntr,:)   = [i j];
-        cntr = cntr+1;
-    end
-end
+[refDist,refPoints] = ALGdistancesBetweenFiducials(refFiducials);
+[trcDist,trcPoints] = ALGdistancesBetweenFiducials(trcFiducials);
 
 %% Sort by lengths
-refSort	= sort(refDist);
-trcSort = sort(trcDist);
+[refSort,permVecRef]	= sort(refDist);
+[trcSort,permVecTrc] = sort(trcDist);
 
 %% Check if difference is bigger than allowed
-if(abs(refSort - trcSort) > errorDist)
+if(max(abs(refSort - trcSort)) > errorDist)
     error('refFiducials not sufficent for trcFiducials');
 end
 
 %% Combine
-ref	= [refDist'     refPoints];
-trc = [trcDist' trcPoints];
-
-ref	= sortrows(ref,1);
-trc = sortrows(trc,1);
+ref	= [refSort     refPoints(permVecRef,:)];
+trc = [trcDist trcPoints(permVecTrc,:)];
 
 refDifference = diff(ref(:,1)) < minDist;
 i=0;
