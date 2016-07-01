@@ -25,7 +25,7 @@ minDist   = 3 ;
 [trcDist,trcPoints] = ALGdistancesBetweenFiducials(trcFiducials);
 
 %% Sort by lengths
-[refSort,permVecRef]	= sort(refDist);
+[refSort,permVecRef] = sort(refDist);
 [trcSort,permVecTrc] = sort(trcDist);
 
 %% Check if difference is bigger than allowed
