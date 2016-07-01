@@ -1,10 +1,22 @@
 function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,cameraFlag,varargin)
 % MOTIONCOMPENSATIONPRIMITIVE moves the robot such that Tch_des is the HMT from head to coil
+%
+%   
+%   Info:           cameraObj: object for the used tracking system
+%                              (Abcatys or Kinect
+%                   X: HMT from coil to head
+%                   Y: HMT from tracking system to coil
+%                   T_C_H_des: Desired HMT from head to coil
+%   Designed by:    Nasser Attar
+%   Date created:   30.06.2016
+%   Last modified:  30.06.2016
+%   Change Log:     
 
 pause('on')
 initialConfig = UR5sendCommand(robObj,'GetStatus');
 
-% Get the HMT from the Head to the Camera
+% Get the HMT from the Head to the Camera. This function is not available
+% at the moment
 T_TS_H = GetHeadToCameraHMT(cameraObj,cameraFlag);
 Z = Y*T_TS_H*invertHTM(T_C_H_des);
 % Get the target HMT from Endeffector to Base to achieve the desired HMT
@@ -15,8 +27,8 @@ row1 = num2str(T_B_E_des(1,:));
 row2 = num2str(T_B_E_des(2,:));
 row3 = num2str(T_B_E_des(3,:));
 
-% Move robot to the desired pose. This moving should be done with enabled
-% collision detection in the future
+% Move robot to the desired pose. This moving should be done with a function 
+% which also features collision detection
 command = ['MoveMinChangeRowWiseStatus ' row1 row2 row3 initialConfig];
 
 if ~strcmp(command,'true')
