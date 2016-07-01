@@ -11,30 +11,18 @@ function ALGplotPTP( P1,P2, varargin )
 %   Info:
 %   Designed by:    Mirko Schimkat
 %   Date created:   05.06.2016
-%   Last modified:  05.06.2016
-%   Change Log:
+%   Last modified:  30.06.2016
+%   Change Log:     Deleted the hold on & hold of function
 
 %% Predefined parameters
-color   =   'b';
+arg   =   'b';
 
 %% Varargin
 for i=1:numel(varargin)
-    if strcmp(varargin{i}, 'y')
-        color = 'y';
-    elseif strcmp(varargin{i}, 'm')
-        color = 'm';
-    elseif strcmp(varargin{i}, 'c')
-        color = 'c';
-    elseif strcmp(varargin{i}, 'r')
-        color = 'r';
-    elseif strcmp(varargin{i}, 'g')
-        color = 'g';
-    elseif strcmp(varargin{i}, 'b')
-        color = 'b';
-    elseif strcmp(varargin{i}, 'w')
-        color = 'w';
-    elseif strcmp(varargin{i}, 'k')
-        color = 'k';        
+    if strcmp(varargin{i}, 'test')
+        display('Not supported');
+    else
+        arg = varargin{i};
     end
 end
 
@@ -45,8 +33,6 @@ y = plotVec(:,2);
 z = plotVec(:,3);
 
 %% Plot
-hold on
-plot3(x,y,z,color);
-hold off
+plot3(x,y,z,arg);
 
 end

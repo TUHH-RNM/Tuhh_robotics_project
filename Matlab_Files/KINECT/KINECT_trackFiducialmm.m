@@ -59,6 +59,8 @@ imgBW(:,end-scanBoarders(2):end)    = 0;                    % Cut right side
 imgBW(1:scanBoarders(1),:)          = 0;                    % Cut upper side
 imgBW(end-scanBoarders(1):end,:)    = 0;                    % Cut lower side
 
+% imgBW = flip(imgBW,1);
+
 s = regionprops(imgBW,'Area','BoundingBox','centroid');
 j = 1;
 
@@ -102,10 +104,9 @@ for i=1:length(xp)
     pointsmm(i,1) = (xp(i)-Px)*Z3D(i)/mx;
     pointsmm(i,2) = (yp(i)-Py)*Z3D(i)/my;
 end
+pointsmm(:,3) = Z3D';
 
 if roundVar
-    pointsmm(:,3) = round(Z3D');
-else
-    pointsmm(:,3) = Z3D';
+    pointsmm = round(pointsmm);
 end
 end

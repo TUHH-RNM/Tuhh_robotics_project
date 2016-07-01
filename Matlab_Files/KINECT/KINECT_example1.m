@@ -1,9 +1,9 @@
 % clc
-ploting = false;
+ploting = true;
 
 
 %% Load data
-load('KINECT\Snapshots\Snapshot1.mat');
+load('KINECT\Snapshots\Snapshot2.mat');
 load('KINECT\@KinectImaq\IRKinectParams999999999999.mat')
 headPoint   = KINECT_importTrackingIni('KINECT/head.ini','round');
 

@@ -1,5 +1,5 @@
 function [distances,pairs] = ALGdistancesBetweenFiducials(fiducials)
-% ALGDISTANCEBETWEENFIDUCIALS returns the distance between every pair of fiducials
+% ALGDISTANCEBETWEENFIDUCIALS returns the distances between all fiducials
 %
 %   Author: Nasser Attar
 %   Date created:   30.06.2016
