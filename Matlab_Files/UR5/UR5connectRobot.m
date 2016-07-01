@@ -24,16 +24,17 @@ obj = tcpip(IP,5005);
 fopen(obj);
 
 %% Read answer from server
-tic
-while(~obj.BytesAvailable && time < max_time)
-    time = toc; % for timeout
-end
-
-if(time > max_time)
-    error('Timeout');
-end
-
-output = char(fread(obj,obj.BytesAvailable)');
+% tic
+% while(~obj.BytesAvailable && time < max_time)
+%     time = toc; % for timeout
+% end
+% 
+% if(time > max_time)
+%     error('Timeout');
+% end
+% 
+% output = char(fread(obj,obj.BytesAvailable)');
+output = [];
 
 %% Handshake with server
 output = [output UR5sendCommand(obj,'Hello Robot')];
