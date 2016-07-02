@@ -1,42 +1,36 @@
 function [ T ] = KINECT_createTransform( refPoints,trcPoints )
-%KINECT_CREATETRANSFORM Summary of this function goes here
-%   Detailed explanation goes here
+%KINECT_createTransform - Creates a transformation matrix which rotates the
+%   points from trcPoints into the points of refPoints
+%
+%   BETA STATUS
+%   
+%   Info:
+%   Designed by:    Mirko Schimkat
+%   Date created:   02.07.2016
+%   Last modified:  02.07.2016
+%   Change Log:
 
-%% Translation
-trans = refPoints(1,:) - trcPoints(1,:);
+%% Create orthonormal coordinates from points
+[refCoord,refBase] = ALGcreateCoordinates(refPoints);
+[trcCoord,trcBase] = ALGcreateCoordinates(trcPoints);
 
-%% Rotation
-% for i = 2:4
-%     refVec = refPoints(i,:) - refPoints(1,:);
-%     trcVec = trcPoints(i,:) - trcPoints(1,:);
-% 
-%    	refVec = refVec/ALGlenghtVec(refVec);
-%    	trcVec = trcVec/ALGlenghtVec(trcVec);
-%         
-%    	rotAx(i-1,:)  = cross(refVec,trcVec);
-%    	anglCos  	  = dot(refVec,trcVec);
-%    	angle(i-1)    = acosd(anglCos);
-% end
-refVec = refPoints(2,:) - refPoints(1,:);
-trcVec = trcPoints(2,:) - trcPoints(1,:);
+%% Calculate translation
+trans = trcBase-refBase;
 
-refVec = refVec/ALGlenghtVec(refVec);
-trcVec = trcVec/ALGlenghtVec(trcVec);
+%% Rotate x-trc to x-ref
+rotAx   = cross(trcCoord(1,:),refCoord(1,:));
+rotAng  = acosd(dot(refCoord(1,:),trcCoord(1,:)));
+rotMat  = ALGrotateMatAngleAxis(rotAng, rotAx);
 
-rotAx   = cross(trcVec,refVec);
-anglCos	= dot(refVec,trcVec);
-angle 	= acosd(anglCos);
+rotCoord = (rotMat*trcCoord')';
 
-%% Create Matrix
-rotation = ALGrotateMatAngleAxis(angle(1), rotAx(1,:));
+rotAx   = rotCoord(1,:);
+rotAng  = acosd(dot(refCoord(2,:),rotCoord(2,:)));
+rotMat  = ALGrotateMatAngleAxis(rotAng, rotAx);
 
-% T(1:3,1:3)  = rotation;
-% T(1:3,4)    = trans;
-% T(4,:)      = [0 0 0 1];
+rotCoord = (rotMat*rotCoord')';
 
-%% Debugg
-T = eye(3);
-T(4,:) = [0 0 0];
-T(:,4) = [trans';1];
+T = [[rotCoord trans'];[0 0 0 1]];
+
 end
 

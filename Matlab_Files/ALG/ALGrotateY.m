@@ -1,5 +1,5 @@
 function [ Ry ] = ALGrotateY( degree )
-%ALFrotateMatrix - Creates a rotation matrix around y.
+%ALGrotateMatrix - Creates a rotation matrix around y.
 %
 %   Info:
 %   Designed by:    Mirko Schimkat
