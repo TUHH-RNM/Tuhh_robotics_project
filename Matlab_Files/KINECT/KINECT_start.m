@@ -5,4 +5,6 @@ addpath('KinectImaq');
 imaqtool
 
 %% Instatiate kinect object
-kin = KinectImaq(999999999999);
+if ~exist('kin')
+    kin = KinectImaq(999999999999);
+end

@@ -25,8 +25,11 @@ for i=1:4
     pointsPixel    = KINECT_trackFiducialPixel(imgIR,imgD);
     pointsmm       = KINECT_trackFiducialmm( imgIR,imgD,cp ,'round');
     pointsmm       = KINECT_identifyFiducials(refPoints,pointsmm);
-    [coord, base]=ALGcreateCoordinates(pointsmm);
-    coordSafe(:,:,i) = coord;
+    [coord, base]  = ALGcreateCoordinates(pointsmm);
+    
+    T           = KINECT_getPosition(pointsmm,refPoints);
+    tmp         = T*[refPoints [1;1;1;1]]';
+    transPoint  = tmp(1:3,:)';
     
     %% Plot 1
     subplot(2,4,i);
@@ -47,9 +50,20 @@ for i=1:4
     zlabel('z');
     hold on
 
-    ALGplotPTP(base,base+coord(1,:),'r');
-    ALGplotPTP(base,base+coord(2,:),'g');
-    ALGplotPTP(base,base+coord(3,:),'b');
+%     ALGplotPTP(base,base+coord(1,:),'r');
+%     ALGplotPTP(base,base+coord(2,:),'g');
+%     ALGplotPTP(base,base+coord(3,:),'b');
+    
+    %% Tracked Points
+    ALGplotPoint(pointsmm(1,:),'r*');
+    ALGplotPoint(pointsmm(2,:),'g*');
+    ALGplotPoint(pointsmm(3,:),'b*');
+    ALGplotPoint(pointsmm(4,:),'m*');
+    
+    ALGplotPoint(transPoint(1,:),'r^');
+    ALGplotPoint(transPoint(2,:),'g^');
+    ALGplotPoint(transPoint(3,:),'b^');
+    ALGplotPoint(transPoint(4,:),'m^');
     
     grid on
     hold off

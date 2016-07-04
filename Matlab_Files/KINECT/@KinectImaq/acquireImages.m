@@ -17,7 +17,7 @@ msg = '';
 framesAcqPrev = framesAcq;
 tt = 0;
 while framesAcq < requestedFrames
-    pause(wt);
+     pause(wt);
     framesAcq = get(vidSrc,'FramesAcquired');
     fprintf(repmat('\b', 1, length(msg)));
     msg = sprintf('Frames acquired: %d\n', framesAcq);
