@@ -134,11 +134,11 @@ for j=1:measurements
         randomPose(:,:,j) = NaN*ones(4);
         trackedPose(:,:,j) = NaN*ones(4);
     else
-        randomPose(:,:,j) = [UR5getPositionHomRowWise(robObj);0 0 0 1];
+        randomPose(:,:,j) = UR5getPositionHomRowWise(robObj);
         % UR5getPositionHomRomWise gives out the position ( the first 3
         % elements of the 4th column ) in meters, but in this case we need
         % it in millimeters
-        randomPose(1:3,4,:) = randomPose(1:3,4,:)*1000;
+        randomPose(1:3,4,j) = randomPose(1:3,4,j)*1000;
         trackedPose(:,:,j) = T;
     end
     

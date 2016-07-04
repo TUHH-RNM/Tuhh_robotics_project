@@ -17,7 +17,8 @@ initialConfig = UR5sendCommand(robObj,'GetStatus');
 
 % Get the HMT from the Head to the Camera. This function is not available
 % at the moment
-T_TS_H = GetHeadToCameraHMT(cameraObj,cameraFlag);
+% T_TS_H = GetHeadToCameraHMT(cameraObj,cameraFlag);
+T_TS_H = cameraObj.getTransformMatrix();
 Z = Y*T_TS_H*invertHTM(T_C_H_des);
 % Get the target HMT from Endeffector to Base to achieve the desired HMT
 % from Head to camera (T_C_H_des)
