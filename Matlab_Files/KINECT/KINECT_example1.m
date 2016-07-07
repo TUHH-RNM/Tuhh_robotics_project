@@ -9,7 +9,7 @@ headPoint   = KINECT_importTrackingIni('KINECT/head.ini','round');
 
 %% Run tracking
 pointsXY    = KINECT_trackFiducialPixel(imgIR,imgD);
-XYZ3D       = KINECT_trackFiducialmm( imgIR,imgD,cp ,'round');
+XYZ3D       = KINECT_trackFiducialmm( imgIR,imgD,'cp',cp ,'round');
 
 %% Plot head points
 if ploting
