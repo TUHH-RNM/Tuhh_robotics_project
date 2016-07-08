@@ -1,5 +1,5 @@
 function [ Rx ] = ALGrotateX( degree )
-%ALFrotateMatrix - Creates a rotation matrix around x.
+%ALGrotateMatrix - Creates a rotation matrix around x.
 %
 %   Info:
 %   Designed by:    Mirko Schimkat
