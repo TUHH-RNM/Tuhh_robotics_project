@@ -1,8 +1,8 @@
 function [coord, base] = ALGcreateCoordinates(points)
 %ALGcreateCoordinages - Creates a orthonormal coordinate system out of at
-%   least three points. The points has to be saved row vectors.
+%   least three points. The points have to be saved as row vectors.
 %   
-%   As return value, the coordinates are given as two or three vectors,
+%   As return value the coordinates are given as two or three vectors,
 %   depending on the dimension of the given points. Also the base of this
 %   system is given back as a single point.
 %   
@@ -21,7 +21,7 @@ numberPoints = size(points,1);
 numberDimm   = size(points,2);
 
 %% Error handling
-if(numberPoints<3)
+if(numberPoints < 3)
     error('Not enough points to create coordinates');
 end
 
