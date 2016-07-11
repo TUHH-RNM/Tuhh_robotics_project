@@ -9,3 +9,6 @@ addpath('ALG');
 addpath('MOC');
 addpath('COL');
 addpath('GUI');
+addpath('DH');
+addpath('Motion_Compensation');
+addpath('PAPL');

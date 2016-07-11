@@ -9,7 +9,6 @@ UR5sendCommand(robObj,'SetVerbosity 4');
 trackObjCoil = GetTrackingObject('coil');
 
 %% Hand-Eye Calibration
-
 load('DenHartParameters');
 [ randomPose, trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 70,'maxRotAngle',30,'maxXYZtrans',200);
 [X, Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);

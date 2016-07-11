@@ -1,5 +1,10 @@
 load('TRS\DenHartParameters.mat');
-% phi = UR5getPositionJoints(robObj);
+
+if exist('robObj')
+    phi = UR5getPositionJoints(robObj);
+else
+    phi = [0 0 0 0 0 0];
+end
 
 points = DH_getRobPoints(phi,DenHat);
 
@@ -42,6 +47,8 @@ surf(x+cx,y+cy,z+cz);
 minDistArm      = radius + 0.1;
 minDistJoint    = minDistArm;
 ph = [cx;cy;cz];
+
+colPhi = ~COL_limitJoints(phi);
 
 col1 =  COL_detectCollision( points(1,1:3)',points(2,1:3)',ph,minDistArm,minDistJoint );
 col2 =  COL_detectCollision( points(2,1:3)',points(3,1:3)',ph,minDistArm,minDistJoint );

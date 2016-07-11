@@ -23,7 +23,7 @@ for i=1:4
     
     %% calculate 
     pointsPixel    = KINECT_trackFiducialPixel(imgIR,imgD);
-    pointsmm       = KINECT_trackFiducialmm( imgIR,imgD,cp ,'round');
+    pointsmm       = KINECT_trackFiducialmm( imgIR,imgD,'cp',cp ,'round');
     pointsmm       = KINECT_identifyFiducials(refPoints,pointsmm);
     [coord, base]  = ALGcreateCoordinates(pointsmm);
     
