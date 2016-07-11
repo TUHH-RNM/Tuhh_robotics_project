@@ -26,13 +26,18 @@ for i=1:70
         errorMax = sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2);
     end
 end
-%% Connect with the Tracking Server for motion compensation
+%% Connect with the Tracking Server for head tracking
 trackObjHead = GetTrackingObject('head');
 
+%% (Optionally) Initialize Kinect for head tracking
+kin = KINECT_initialize('head',999999999999);
 %% Specify the desired transformation from Head to Coil
 % Important !!! Bring the coil in the desired position relative to the coil
-
-T_TS_H = trackObjHead.getTransformMatrix();
+% [T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
+[T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kin);
+if ~visibility
+    warning('Head is not visible\n')
+end
 T_B_H = Y*T_TS_H;
 
 T_B_E = UR5getPositionHomRowWise(robObj);
@@ -44,10 +49,9 @@ T_C_H_des = invertHTM(T_B_C)*T_B_H;
 % command = 'EnableAlter';
 % % Enable real time mode
 % UR5sendCommand(robObj,command); 
-initialConfig = UR5sendCommand(robObj,'GetStatus');
 h = figure('KeyPressFcn','keep=0');
 keep = true;
 while keep
-    MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,initialConfig)
+    MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,'atrcsys')
     pause(0.01)
 end

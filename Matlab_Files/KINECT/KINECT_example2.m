@@ -3,7 +3,7 @@ load('KINECT\Snapshots\Snapshot2.mat');
 load('KINECT\@KinectImaq\IRKinectParams999999999999.mat')
 
 refPoints   = KINECT_importTrackingIni('KINECT/head.ini');
-trcPoints   = KINECT_trackFiducialmm( imgIR,imgD,cp,'round' );
+trcPoints   = KINECT_trackFiducialmm( imgIR,imgD,'cp',cp,'round' );
 trcPoints   = KINECT_identifyFiducials(refPoints,trcPoints);
 
 T = KINECT_createTransform(refPoints,trcPoints);
