@@ -17,8 +17,9 @@ function [ pointsmm ] = KINECT_trackFiducialmm( imgIR,imgD,varargin )
 %   Info:           Preallocation has to be added
 %   Designed by:    Mirko Schimkat
 %   Date created:   19.06.2016
-%   Last modified:  19.06.2016
-%   Change Log:
+%   Last modified:  11.07.2016
+%   Change Log:  Corrected the assignment from IntrinsicMatrix to Px and
+%                Py; Nasser Attar
 
 
 
@@ -122,8 +123,8 @@ Z3D = double(Z3D);
 IntrinsicMatrix = cp.IntrinsicMatrix';
 mx = IntrinsicMatrix(1,1);
 my = IntrinsicMatrix(2,2);
-Px = IntrinsicMatrix(1,3);
-Py = IntrinsicMatrix(2,3);
+Px = IntrinsicMatrix(3,1);
+Py = IntrinsicMatrix(3,2);
 
 for i=1:length(xp)
     pointsmm(i,1) = (xp(i)-Px)*Z3D(i)/mx;
