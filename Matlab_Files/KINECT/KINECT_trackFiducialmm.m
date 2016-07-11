@@ -123,8 +123,8 @@ Z3D = double(Z3D);
 IntrinsicMatrix = cp.IntrinsicMatrix';
 mx = IntrinsicMatrix(1,1);
 my = IntrinsicMatrix(2,2);
-Px = IntrinsicMatrix(3,1);
-Py = IntrinsicMatrix(3,2);
+Px = IntrinsicMatrix(1,3);
+Py = IntrinsicMatrix(2,3);
 
 for i=1:length(xp)
     pointsmm(i,1) = (xp(i)-Px)*Z3D(i)/mx;
