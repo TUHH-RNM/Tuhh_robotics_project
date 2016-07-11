@@ -27,8 +27,8 @@ scanArea        = [200 200];    % y x
 minDist         = 100;
 maxDist         = 2000;    
 threshold       = .9;
-pixelSizeMin    = 6 * 6;
-pixelSizeMax    = 2 * 2;
+pixelSizeMax    = 6 * 6;
+pixelSizeMin    = 2 * 2;
 roundVar        = false;
 numFiducials    = 4;
 
@@ -45,8 +45,8 @@ for i=1:numel(varargin)
         minDist         = kin.minDist       ;
         maxDist         = kin.maxDist       ;
         threshold       = kin.threshold     ;
-        pixelSizeMax    = kin.pixelSizeMax  ;
-        pixelSizeMin    = kin.pixelSizeMin  ;
+        pixelSizeMin    = kin.pixelSizeMax  ;
+        pixelSizeMax    = kin.pixelSizeMin  ;
         roundVar        = kin.roundVar      ;
     elseif strcmp(varargin{i}, 'scanArea')
         scanArea = varargin{i+1};
@@ -57,9 +57,9 @@ for i=1:numel(varargin)
     elseif strcmp(varargin{i},'threshold')
         threshold = varargin{i+1};
     elseif strcmp(varargin{i},'pixelSizeMax')
-        pixelSizeMax = varargin{i+1};
-    elseif strcmp(varargin{i},'pixelSizeMin')
         pixelSizeMin = varargin{i+1};
+    elseif strcmp(varargin{i},'pixelSizeMin')
+        pixelSizeMax = varargin{i+1};
     elseif strcmp(varargin{i},'round')
         roundVar = true;
     elseif strcmp(varargin{i},'numFiducials')
@@ -87,7 +87,7 @@ s = regionprops(imgBW,'Area','BoundingBox','centroid');
 j = 1;
 
 for i=1:numel(s) 
-    if (s(i).Area < pixelSizeMin) &&  (s(i).Area > pixelSizeMax)
+    if (s(i).Area < pixelSizeMax) &&  (s(i).Area > pixelSizeMin)
         % Centroid of point
         xp(j) = s(i).Centroid(1);
         yp(j) = s(i).Centroid(2);

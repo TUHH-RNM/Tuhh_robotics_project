@@ -1,5 +1,5 @@
 function [ Rz ] = ALGrotateZ( degree )
-%ALFrotateMatrix - Creates a rotation matrix around z.
+%ALGrotateZ - Creates a rotation matrix around z.
 %
 %   Info:
 %   Designed by:    Mirko Schimkat
