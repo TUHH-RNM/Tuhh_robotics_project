@@ -23,7 +23,11 @@ for i=1:4
     
     %% calculate 
     pointsPixel    = KINECT_trackFiducialPixel(imgIR,imgD);
+<<<<<<< HEAD
     pointsmm       = KINECT_trackFiducialmm( imgIR,imgD,'cp',cp ,'round');
+=======
+    pointsmm       = KINECT_trackFiducialmm( imgIR,imgD,'cp',cp,'round');
+>>>>>>> eb6039bb8011d167698554a5ed7557b9e48ea571
     pointsmm       = KINECT_identifyFiducials(refPoints,pointsmm);
     [coord, base]  = ALGcreateCoordinates(pointsmm);
     

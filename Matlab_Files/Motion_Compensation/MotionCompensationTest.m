@@ -1,6 +1,7 @@
 %% Script for Motion Compensation
 
 %% Connect with the robot
+% Before executing these commands, invoke the (non-blocking) rob6server
 robObj = UR5connectRobot('134.28.45.95');
 UR5sendCommand(robObj,'SetSpeed 120');
 UR5sendCommand(robObj,'SetVerbosity 4');
@@ -38,7 +39,7 @@ T_B_E(1:3,4) = T_B_E(1:3,4)*1000;
 T_B_C = T_B_E*X;
 T_C_H_des = invertHTM(T_B_C)*T_B_H;
 
-%% Dot the actual Motion Compensation
+%% Do the actual Motion Compensation
 % command = 'EnableAlter';
 % % Enable real time mode
 % UR5sendCommand(robObj,command); 
