@@ -15,7 +15,6 @@ load('DenHartParameters');
 [ randomPose, trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 70,'maxRotAngle',30,'maxXYZtrans',200);
 [X, Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);
 
-%% Print the number of valid measurements
 fprintf('Number of valid measurements %d\n',nnz(~isnan(randomPose(1,1,:))));
 
 %% Compute the maximum error 
@@ -31,10 +30,11 @@ trackObjHead = GetTrackingObject('head');
 
 %% (Optionally) Initialize Kinect for head tracking
 kin = KINECT_initialize('head',999999999999);
+
 %% Specify the desired transformation from Head to Coil
 % Important !!! Bring the coil in the desired position relative to the coil
-% [T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
-[T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kin);
+[T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
+% [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kin);
 if ~visibility
     warning('Head is not visible\n')
 end

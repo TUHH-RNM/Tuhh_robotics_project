@@ -34,8 +34,6 @@ row3 = num2str(T_B_E_des(3,:));
 % Move robot to the desired pose. This moving should be done with a function 
 % which also features collision detection
 command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
-% Give the robot some time for rest
-pause(0.002);
 output = UR5sendCommand(robObj,command);
 if ~strfind(output,'true')
     warning('\nMotion Compensation was not successful\n')
