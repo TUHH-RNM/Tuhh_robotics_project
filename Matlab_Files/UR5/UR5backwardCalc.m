@@ -17,7 +17,7 @@ row1 = num2str(T06SimInMillimeters(1,:));
 row2 = num2str(T06SimInMillimeters(2,:));
 row3 = num2str(T06SimInMillimeters(3,:));
 config = UR5sendCommand(obj,'GetStatus');
-command = ['BackwardCalc' ' ' row1 row2 row3 ' ' config];
+command = ['BackwardCalc' ' ' row1 ' ' row2 ' ' row3 ' ' config];
 
 receive = UR5sendCommand(obj,command);
 out = UR5str2double(receive,'varCol',6);

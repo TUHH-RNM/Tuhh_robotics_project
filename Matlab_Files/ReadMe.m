@@ -19,9 +19,9 @@ angles1 = UR5getPositionJoints(obj);
 % Set speed
 UR5setSpeed(obj,120);
 
-% Set new angulars
-angles2 = [0 0 0 0 0 0];
-UR5movePTPJoints(obj,angles2)
+% Set new angles
+angles2 = [80 80 80 80 80 80];
+UR5movePTPJoints(obj,angles2);
 
 % Disconect from server
 UR5disconnectRobot(obj)
