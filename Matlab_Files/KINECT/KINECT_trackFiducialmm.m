@@ -17,8 +17,9 @@ function [ pointsmm ] = KINECT_trackFiducialmm( imgIR,imgD,varargin )
 %   Info:           Preallocation has to be added
 %   Designed by:    Mirko Schimkat
 %   Date created:   19.06.2016
-%   Last modified:  19.06.2016
-%   Change Log:
+%   Last modified:  11.07.2016
+%   Change Log:  Corrected the assignment from IntrinsicMatrix to Px and
+%                Py; Nasser Attar
 
 
 
