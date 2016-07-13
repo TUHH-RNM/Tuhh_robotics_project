@@ -1,10 +1,10 @@
-load('TRS\DenHartParameters.mat');
+load('TRS\DenHartParametersUR3.mat');
 
-if exist('robObj')
-    phi = UR5getPositionJoints(robObj);
-else
-    phi = [0 -45 0 0 0 0];
-end
+% if exist('robObj')
+%     phi = UR5getPositionJoints(robObj);
+% else
+%     phi = [0 -45 0 0 0 0];
+% end
 
 points = DH_getRobPoints(phi,DenHat);
 

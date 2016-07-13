@@ -8,9 +8,11 @@ function T_K_M = KINECT_getMarkerFrameHTM(kin,varargin)
 
 headFrame = false;
 % Search in varargin for additional options
-for i = numel(varargin)
-    if strcmp(varargin{i},'headFrame')
-        headFrame = true;
+if ~isempty(varargin)
+    for i = numel(varargin)
+        if strcmp(varargin{i},'headFrame')
+            headFrame = true;
+        end
     end
 end
 

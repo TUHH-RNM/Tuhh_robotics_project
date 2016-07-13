@@ -1,4 +1,4 @@
-function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,varargin)
+function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,rtFlag,varargin)
 % MOTIONCOMPENSATIONPRIMITIVE moves the robot such that T_C_H_des is the HMT from head to coil
 %
 %   
@@ -33,7 +33,11 @@ row3 = num2str(T_B_E_des(3,:));
 
 % Move robot to the desired pose. This moving should be done with a function 
 % which also features collision detection
-command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
+if rtFlag
+    command = ['MoveRTHomRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
+else
+    command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
+end
 output = UR5sendCommand(robObj,command);
 if ~strfind(output,'true')
     warning('\nMotion Compensation was not successful\n')

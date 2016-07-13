@@ -31,67 +31,69 @@ for i=1:70
         errorMax = sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2);
     end
 end
-
-%% Compute T_B_K
-% The Y from the Hand-Eye Calibration is the HTM from the Tracking system
-% to base. If the Kinect shall be used we need the HMT T_TS_K.
-if useKinect
-    kinCoil = KINECT_initialize('coil',999999999999);
-    success = false;
-    while ~success
-        [~,T_TS_C_1] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 1,'maxRotAngle',30,'maxXYZtrans',200);
-        T_K_C_1 = KINECT_getMarkerFrameHTM(kinCoil);
-        if nnz(isnan(T_TS_C_1)) == 0
-            success = true;
-        end
-    end
-    T_TS_K = T_TS_C_1*invertHTM(T_K_C_1);
-    Y = Y*T_TS_K;
-end
 %% Connect with the Tracking Server for head tracking
 trackObjHead = GetTrackingObject('head');
 
 %% (Optionally) Initialize Kinect for head tracking
-kinHead = KINECT_initialize('head',999999999999);
+load('KINECT\kinObj.mat');
+GUI_config_KINECT;
+kinObjHead = kin;
+
+%% Compute T_B_K
+% The Y from the Hand-Eye Calibration is the HTM from the Tracking system
+% to base. If the Kinect shall be used we need the HMT T_TS_K.
+display('Test')
+if useKinect
+    success = false;
+    while ~success
+        [T_TS_C_1,visibility] = trackObjHead.getTransformMatrix();
+        T_K_C_1 = KINECT_getMarkerFrameHTM(kinObjHead);
+        if visibility
+            success = true;
+        end
+    end
+    T_TS_K = T_TS_C_1*invertHTM(T_K_C_1);
+    Y_K = Y*T_TS_K;
+end
 
 %% Specify the desired transformation from Head to Coil
 % Important !!! Bring the coil in the desired position relative to the coil
-% if useKinect
-%     [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kin,'headFrame');
-% else
-%     [T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
-% end
-% if ~visibility
-%     warning('Head is not visible\n')
-% end
-% T_B_H = Y*T_TS_H;
-% 
-% T_B_E = UR5getPositionHomRowWise(robObj);
-% T_B_E(1:3,4) = T_B_E(1:3,4)*1000;
-% T_B_C = T_B_E*X;
-% T_C_H_des = invertHTM(T_B_C)*T_B_H;
+if useKinect
+    [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kin,'headFrame');
+else
+    [T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
+end
+if ~visibility
+    warning('Head is not visible\n')
+end
+T_B_H = Y*T_TS_H;
 
-% Demanded by the project task
-T_H_C_des = [0.868967 0.203085 -0.451281 48.631371;
-             0.331437 -0.916017 0.225975 -85.534794;
-             -0.367487 -0.345935 -0.863298 126.256582;
-             0 0 0 1];
-T_C_H_des = invertHTM(T_H_C_des);         
+T_B_E = UR5getPositionHomRowWise(robObj);
+T_B_E(1:3,4) = T_B_E(1:3,4)*1000;
+T_B_C = T_B_E*X;
+T_C_H_des = invertHTM(T_B_C)*T_B_H;
+
+% % Demanded by the project task
+% T_H_C_des = [0.868967 0.203085 -0.451281 48.631371;
+%              0.331437 -0.916017 0.225975 -85.534794;
+%              -0.367487 -0.345935 -0.863298 126.256582;
+%              0 0 0 1];
+% T_C_H_des = invertHTM(T_H_C_des);         
 
 %% Activate Real time mode
 UR5sendCommand(robObj,'EnableAlter');
 
 %% Make a figure handles
-UR5sendCommand(robObj,'SetSpeed 120');
+UR5sendCommand(robObj,'SetSpeed 20');
 h = figure('KeyPressFcn','keep=0');
 keep = true;
 i = 0;
 %% Do the actual Motion Compensation
 while i < 2000
     if useKinect
-        MotionCompensationPrimitive(robObj,kinHead,X,Y,T_C_H_des,'kinect')
+        MotionCompensationPrimitive(robObj,kinHead,X,Y,T_C_H_des,'kinect',false);
     else
-        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,'atrcsys')
+        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,'atrcsys',false);
     end
     pause(0.01)
     i = i + 1;

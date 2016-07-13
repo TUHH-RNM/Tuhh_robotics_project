@@ -51,7 +51,7 @@ while 1
 end
 
 %% Calculate the initial pose
-initialPose = TRSforwardKinDenHart(DenHartParameters,initialAngles);
+initialPose = TRSforwardKinDenHart(DenHartParameters,initialAngles*pi/180);
 initialPose(1:3,4) = initialPose(1:3,4)*1000;
 
 % Query the initial configuration
