@@ -87,6 +87,8 @@ imgBW(end-scanBoarders(1):end,:)        = 0;                        % Cut lower 
 s = regionprops(imgBW,'Area','BoundingBox','centroid');
 j = 1;
 
+Z3D = [];
+
 for i=1:numel(s) 
     if (s(i).Area < pixelSizeMax) &&  (s(i).Area > pixelSizeMin)
         % Centroid of point

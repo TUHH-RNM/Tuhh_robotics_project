@@ -14,8 +14,8 @@ function [vidDp, vidIR] = KINECT_startImage( kin )
 %   Last modified:  04.07.2016
 %   Change Log:
 
-vidIR   = kin.vidIR;
-vidDp   = kin.vidDepth;
+vidIR   = kin.KINECT.vidIR;
+vidDp   = kin.KINECT.vidDepth;
 vidIR.FramesPerTrigger = 1;
 vidDp.FramesPerTrigger = 1;
 

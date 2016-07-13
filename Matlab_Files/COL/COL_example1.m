@@ -3,7 +3,7 @@ load('TRS\DenHartParameters.mat');
 if exist('robObj')
     phi = UR5getPositionJoints(robObj);
 else
-    phi = [0 0 0 0 0 0];
+    phi = [0 -45 0 0 0 0];
 end
 
 points = DH_getRobPoints(phi,DenHat);

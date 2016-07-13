@@ -22,7 +22,7 @@ function varargout = GUI_config_KINECT(varargin)
 
 % Edit the above text to modify the response to help GUI_config_KINECT
 
-% Last Modified by GUIDE v2.5 07-Jul-2016 17:28:14
+% Last Modified by GUIDE v2.5 13-Jul-2016 11:08:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -86,7 +86,23 @@ function button_takeSnapshot_Callback(hObject, eventdata, handles)
 % hObject    handle to button_takeSnapshot (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load('KINECT\Snapshots\Snapshot1.mat');
+
+serialNumber    = str2double(handles.edit_serialNumber.String);
+scanArea        = [str2double(handles.edit_scanAreaHor.String) str2double(handles.edit_scanAreaVertical.String)];
+minDist         = str2double(handles.edit_minDist.String);
+maxDist         = str2double(handles.edit_maxDist.String);
+thresh          = str2double(handles.edit_threshold.String);
+pixSizeMin      = str2double(handles.edit_pixSizeMin.String);
+pixSizeMax      = str2double(handles.edit_pixSizeMax.String);
+
+handles.kin     = KINECT_initialize( 'head', serialNumber, 'scanArea',scanArea, 'minDist', minDist, 'maxDist',maxDist,'threshold',thresh,'pixelSizeMin',pixSizeMin,'pixelSizeMax',pixSizeMax); 
+[vidDp, vidIR]  = KINECT_startImage( handles.kin );
+
+while(~KINECT_imageReady( vidDp, vidIR ))
+end
+
+[ imgD,imgIR ] = KINECT_getImages( vidDp,vidIR );
+
 handles.imgIR   = imgIR;
 handles.imgD    = imgD;
 imshow(handles.imgIR, 'Parent', handles.axes_Preview)
@@ -100,7 +116,7 @@ function pushbutton_analyze_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 serialNumber    = str2double(handles.edit_serialNumber.String);
-scanArea        = [str2double(handles.edit_scanAreaHor.String) str2double(handles.edit_scanAreaVertical.String)];
+scanArea        = [str2double(handles.edit_scanAreaVertical.String) str2double(handles.edit_scanAreaHor.String)];
 minDist         = str2double(handles.edit_minDist.String);
 maxDist         = str2double(handles.edit_maxDist.String);
 thresh          = str2double(handles.edit_threshold.String);
@@ -116,6 +132,23 @@ hold on;
 if(pixelTracked)
     plot(pixelTracked(:,1),pixelTracked(:,2),'r*')
 end
+%% Plot lines for scan area
+picArea    	= size(handles.imgIR);
+scanBoarders = round((picArea - scanArea)./2);
+endX = picArea(1);
+endY = picArea(2);
+y1 = scanBoarders(1);
+y2 = endX-scanBoarders(1);
+x1 = scanBoarders(2);
+x2 = endY-scanBoarders(2);
+
+plot([x1,x1],[y1,y2],'y');
+plot([x1,x2],[y2,y2],'y');
+plot([x2,x2],[y2,y1],'y');
+plot([x2,x1],[y1,y1],'y');
+
+hold off
+guidata(hObject, handles);
 
 
 
@@ -415,3 +448,54 @@ function edit_serialNumber_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in pushbutton_Initialize.
+function pushbutton_Initialize_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_Initialize (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function edit_trackObj_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_trackObj (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_trackObj as text
+%        str2double(get(hObject,'String')) returns contents of edit_trackObj as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_trackObj_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_trackObj (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_Save.
+function pushbutton_Save_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_Save (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+kin = handles.kin;
+save('KINECT/kinObj.mat','kin');
+
+
+% --- Executes on button press in pushbutton_Load.
+function pushbutton_Load_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_Load (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+load('KINECT\Snapshots\Snapshot1.mat');
+handles.imgIR   = imgIR;
+handles.imgD    = imgD;
+imshow(handles.imgIR, 'Parent', handles.axes_Preview)
+guidata(hObject, handles);
