@@ -17,10 +17,10 @@ UR5sendCommand(robObj,'SetVerbosity 4');
 trackObjCoil = GetTrackingObject('coil');
 
 %% Hand-Eye Calibration
-
-load('DenHartParameters');
-[ randomPose, trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 70,'maxRotAngle',30,'maxXYZtrans',200);
-[X, Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);
+% Load the necessary Denavit-Hartenberg parameters from the mat-file
+load('DenHartParametersUR3');
+[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 70,'maxRotAngle',30,'maxXYZtrans',200);
+[X,Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);
 
 fprintf('Number of valid measurements %d\n',nnz(~isnan(randomPose(1,1,:))));
 
@@ -35,16 +35,25 @@ end
 
 %% Compute T_B_K
 % The Y from the Hand-Eye Calibration is the HTM from the Tracking system
-% to base. If the Kinect shall be used we need the HMT T_TS_K
+% to base. If the Kinect shall be used we need the HMT T_TS_K.
 if useKinect
-    T_TS_K = eye(4);
+    kinCoil = KINECT_initialize('head',999999999999);
+    success = false;
+    while ~success
+        [~,T_TS_C_1] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 1,'maxRotAngle',30,'maxXYZtrans',200);
+        T_K_C_1 = KINECT_getMarkerFrameHTM(kinCoil);
+        if nnz(isnan(T_TS_C_1)) == 0
+            success = true;
+        end
+    end
+    T_TS_K = T_TS_C_1*invertHTM(T_K_C_1);
     Y = Y*T_TS_K;
 end
 %% Connect with the Tracking Server for head tracking
 trackObjHead = GetTrackingObject('head');
 
 %% (Optionally) Initialize Kinect for head tracking
-kin = KINECT_initialize('head',999999999999);
+kinHead = KINECT_initialize('head',999999999999);
 
 %% Specify the desired transformation from Head to Coil
 % Important !!! Bring the coil in the desired position relative to the coil
@@ -71,12 +80,16 @@ T_H_C_des = [0.868967 0.203085 -0.451281 48.631371;
 T_C_H_des = invertHTM(T_H_C_des);         
 
 %% Do the actual Motion Compensation
-% command = 'EnableAlter';
-% % Enable real time mode
-% UR5sendCommand(robObj,command); 
+command = 'EnableAlter';
+% Enable real time mode
+UR5sendCommand(robObj,command); 
 h = figure('KeyPressFcn','keep=0');
 keep = true;
 while keep
-    MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,'atrcsys')
+    if useKinect
+        MotionCompensationPrimitive(robObj,kinHead,X,Y,T_C_H_des,'kinect')
+    else
+        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,'atrcsys')
+    end
     pause(0.01)
 end

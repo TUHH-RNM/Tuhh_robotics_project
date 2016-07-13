@@ -14,7 +14,7 @@ function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,vara
 
 % Get the HMT from the Head to the Camera
 if strcmp(camFlag,'kinect')
-    [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(cameraObj,'headFrame');
+    [T_TS_H,visibility] = KINECT_getMarkerFrameHTM(cameraObj,'headFrame');
 elseif strcmp(camFlag,'atrcsys')
     [T_TS_H,visibility,~] = cameraObj.getTransformMatrix();
 end
