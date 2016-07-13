@@ -1,9 +1,9 @@
-function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,initialConfig,varargin)
-% MOTIONCOMPENSATIONPRIMITIVE moves the robot such that Tch_des is the HMT from head to coil
+function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,varargin)
+% MOTIONCOMPENSATIONPRIMITIVE moves the robot such that T_C_H_des is the HMT from head to coil
 %
 %   
 %   Info:           cameraObj: object for the used tracking system
-%                              (Abcatys or Kinect
+%                              (Atrsys or Kinect)
 %                   X: HMT from coil to head
 %                   Y: HMT from tracking system to coil
 %                   T_C_H_des: Desired HMT from head to coil
@@ -12,12 +12,12 @@ function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,initialConfi
 %   Last modified:  30.06.2016
 %   Change Log:     
 
-pause('on')
-
-% Get the HMT from the Head to the Camera. This function is not available
-% at the moment
-% T_TS_H = GetHeadToCameraHMT(cameraObj,cameraFlag);
-[T_TS_H,visibility,~] = cameraObj.getTransformMatrix();
+% Get the HMT from the Head to the Camera
+if strcmp(camFlag,'kinect')
+    [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(cameraObj);
+elseif strcmp(camFlag,'atrcsys')
+    [T_TS_H,visibility,~] = cameraObj.getTransformMatrix();
+end
 if ~visibility
     warning('Head is not visible\n')
     return
@@ -33,11 +33,7 @@ row3 = num2str(T_B_E_des(3,:));
 
 % Move robot to the desired pose. This moving should be done with a function 
 % which also features collision detection
-%currentHMT_B_E = UR5getPositionHomRowWise(robObj);
 command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
-% Give the robot some time for rest
-pause(0.002);
-output = UR5sendCommand(robObj,'BRAKE');
 output = UR5sendCommand(robObj,command);
 if ~strfind(output,'true')
     warning('\nMotion Compensation was not successful\n')
