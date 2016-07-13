@@ -123,5 +123,10 @@ angles(4) = theta4;
 %%
 angles = round(angles*360/(2*pi),2);
 
+if isreal(angles)
+else
+    angles = [NaN NaN NaN NaN NaN NaN];
+end
+
 end
 
