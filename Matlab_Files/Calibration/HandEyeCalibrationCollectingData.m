@@ -39,10 +39,11 @@ else
 end
 
 % Wait until the joints don't change anymore (robot arrived)
-temp2 = 'a';
+temp2 = [0 0 0 0 0 0];
 while 1
-    temp1 = UR5sendCommand(robObj,'GetPositionJoints');
-    if strcmp(temp1,temp2)
+    temp1 = str2num(UR5sendCommand(robObj,'GetPositionJoints')); %#ok<ST2NM>
+    absAngleDiff = abs(temp1 - temp2);
+    if max(absAngleDiff) < 0.1
         break;
     end
     temp2 = temp1;
@@ -112,10 +113,11 @@ for j=1:measurements
     UR5sendCommand(robObj,command);
     
     % Wait until the joints don't change anymore (robot arrived)
-    temp2 = 'a';
+    temp2 = [0 0 0 0 0 0];
     while 1
-        temp1 = UR5sendCommand(robObj,'GetPositionJoints');
-        if strcmp(temp1,temp2)
+        temp1 = str2num(UR5sendCommand(robObj,'GetPositionJoints')); %#ok<ST2NM>
+        absAngleDiff = abs(temp1 - temp2);
+        if max(absAngleDiff) < 0.1
             break;
         end
         temp2 = temp1;

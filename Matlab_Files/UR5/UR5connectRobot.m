@@ -11,16 +11,19 @@ function [ obj ] = UR5connectRobot( IP, varargin )
 max_time    =   10;
 time        =   0;
 DispOn      =   false;
+port        =   5005;
 
 %% Varargin
 for i=1:numel(varargin)
     if strcmp(varargin{i}, 'DispOn')
         DispOn = true;
+    elseif strcmp(varargin{i},'Port')
+        port = varargin{i+1};
     end
 end
 
 %% Open TCP connection
-obj = tcpip(IP,5005);
+obj = tcpip(IP,port);
 fopen(obj);
 
 %% Read answer from server
