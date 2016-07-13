@@ -1,4 +1,4 @@
-function T_K_M = KINECT_getMarkerFrameHMT(kin)
+function T_K_M = KINECT_getMarkerFrameHTM(kin,varargin)
 % KINECT_GETMARKERFRAMEHMT gives back the HMT from the marker frame to the Kinect camera
 %
 %    Author: Nasser Attar
@@ -6,9 +6,17 @@ function T_K_M = KINECT_getMarkerFrameHMT(kin)
 %    Last modified: 11.07.2016
 %    Modified:  
 
+headFrame = false;
+% Search in varargin for additional options
+for i = numel(varargin)
+    if strcmp(varargin{i},'headFrame')
+        headFrame = true;
+    end
+end
+
 % Make a Depth and IR picture of with Kinect. These pictures must be taken
 % at the exact same time
-[imgD,imgIR,~] = KINECT_getSynchronousImages(kin);
+[imgD,imgIR,acquireTime] = KINECT_getSynchronousImages(kin); %#ok<ASGLU>
 
 % Determine the positions of the markerpoints relative to the Kinect
 % coordinate system.
@@ -42,5 +50,15 @@ R_K_M(:,2) = R_K_M(:,2)/sqrt(sum(R_K_M(:,2).^2));
 R_K_M(:,3) = R_K_M(:,3)/sqrt(sum(R_K_M(:,3).^2));
 
 T_K_M = [R_K_M,markerPoints_K(1,:)';0 0 0 1];
+
+% Ouput the HTM from the head frame (according to the MEG/EEG
+% convention) to the Kinect frame
+if headFrame
+    T_H_M = [0.004056364482707 -0.967455059014186 -0.253010702621596 -54.756751128760129;
+             0.956482476316876 -0.070067530666923 0.283252915519113 -76.092549496522793;
+            -0.291762597549653 -0.243150168484619 0.925069089991579 80.697550637454697;
+             0 0 0 1];
+    T_K_M = T_K_M*invertHTM(T_H_M);     
+end
 
 end

@@ -3,7 +3,7 @@ function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,vara
 %
 %   
 %   Info:           cameraObj: object for the used tracking system
-%                              (Atrsys or Kinect)
+%                              (Atrcsys or Kinect)
 %                   X: HMT from coil to head
 %                   Y: HMT from tracking system to coil
 %                   T_C_H_des: Desired HMT from head to coil
@@ -14,7 +14,7 @@ function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,vara
 
 % Get the HMT from the Head to the Camera
 if strcmp(camFlag,'kinect')
-    [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(cameraObj);
+    [T_TS_H,visibility] = KINECT_getMarkerFrameHTM(cameraObj,'headFrame');
 elseif strcmp(camFlag,'atrcsys')
     [T_TS_H,visibility,~] = cameraObj.getTransformMatrix();
 end
