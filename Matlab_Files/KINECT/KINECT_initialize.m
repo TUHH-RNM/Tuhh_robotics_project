@@ -42,7 +42,7 @@ end
 %% Load reference points
 if strcmp(trackObj,'coil')
     refPoints       = KINECT_importTrackingIni('KINECT/coil.ini');
-    numFiducials    = 4;
+    numFiducials    = 5;
 elseif strcmp(trackObj,'head')
     refPoints = KINECT_importTrackingIni('KINECT/head.ini');
     numFiducials    = 4;

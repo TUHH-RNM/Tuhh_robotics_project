@@ -46,8 +46,8 @@ for i=1:numel(varargin)
         minDist         = kin.minDist       ;
         maxDist         = kin.maxDist       ;
         threshold       = kin.threshold     ;
-        pixelSizeMin    = kin.pixelSizeMax  ;
-        pixelSizeMax    = kin.pixelSizeMin  ;
+        pixelSizeMin    = kin.pixelSizeMin  ;
+        pixelSizeMax    = kin.pixelSizeMax  ;
         roundVar        = kin.roundVar      ;
     elseif strcmp(varargin{i}, 'scanArea')
         scanArea = varargin{i+1};
@@ -88,9 +88,11 @@ s = regionprops(imgBW,'Area','BoundingBox','centroid');
 j = 1;
 
 Z3D = [];
+xp  = [];
+yp  = [];
 
 for i=1:numel(s) 
-    if (s(i).Area < pixelSizeMax) &&  (s(i).Area > pixelSizeMin)
+    if (pixelSizeMin <= s(i).Area) &&  (s(i).Area <= pixelSizeMax)
         % Centroid of point
         xp(j) = s(i).Centroid(1);
         yp(j) = s(i).Centroid(2);
@@ -119,6 +121,10 @@ end
 %% Convert Pixels to mm
 if(size(Z3D,2) > numFiducials)
     error('Distortions destroyed the measurement');
+end
+
+if isempty(Z3D) || isempty(xp) || isempty(yp)
+    error('Points missing');
 end
 
 Z3D = double(Z3D);

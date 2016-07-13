@@ -22,7 +22,7 @@ function varargout = GUI_config_KINECT(varargin)
 
 % Edit the above text to modify the response to help GUI_config_KINECT
 
-% Last Modified by GUIDE v2.5 13-Jul-2016 11:08:31
+% Last Modified by GUIDE v2.5 13-Jul-2016 12:24:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -94,8 +94,9 @@ maxDist         = str2double(handles.edit_maxDist.String);
 thresh          = str2double(handles.edit_threshold.String);
 pixSizeMin      = str2double(handles.edit_pixSizeMin.String);
 pixSizeMax      = str2double(handles.edit_pixSizeMax.String);
+systemFrame     = handles.edit_trackObj.String;
 
-handles.kin     = KINECT_initialize( 'head', serialNumber, 'scanArea',scanArea, 'minDist', minDist, 'maxDist',maxDist,'threshold',thresh,'pixelSizeMin',pixSizeMin,'pixelSizeMax',pixSizeMax); 
+handles.kin     = KINECT_initialize( systemFrame, serialNumber, 'scanArea',scanArea, 'minDist', minDist, 'maxDist',maxDist,'threshold',thresh,'pixelSizeMin',pixSizeMin,'pixelSizeMax',pixSizeMax); 
 [vidDp, vidIR]  = KINECT_startImage( handles.kin );
 
 while(~KINECT_imageReady( vidDp, vidIR ))
@@ -122,8 +123,9 @@ maxDist         = str2double(handles.edit_maxDist.String);
 thresh          = str2double(handles.edit_threshold.String);
 pixSizeMin      = str2double(handles.edit_pixSizeMin.String);
 pixSizeMax      = str2double(handles.edit_pixSizeMax.String);
+systemFrame     = handles.edit_trackObj.String;
 
-handles.kin = KINECT_initialize( 'head', serialNumber, 'scanArea',scanArea, 'minDist', minDist, 'maxDist',maxDist,'threshold',thresh,'pixelSizeMin',pixSizeMin,'pixelSizeMax',pixSizeMax); 
+handles.kin = KINECT_initialize( systemFrame, serialNumber, 'scanArea',scanArea, 'minDist', minDist, 'maxDist',maxDist,'threshold',thresh,'pixelSizeMin',pixSizeMin,'pixelSizeMax',pixSizeMax); 
 
 pixelTracked = KINECT_trackFiducialPixel(handles.imgIR,handles.imgD,'kinObj',handles.kin);
 
@@ -499,3 +501,26 @@ handles.imgIR   = imgIR;
 handles.imgD    = imgD;
 imshow(handles.imgIR, 'Parent', handles.axes_Preview)
 guidata(hObject, handles);
+
+
+
+function edit_fiducials_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_fiducials (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_fiducials as text
+%        str2double(get(hObject,'String')) returns contents of edit_fiducials as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_fiducials_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_fiducials (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
