@@ -1,4 +1,4 @@
-function [ resultAngles, anglesSum ] = TRSAnglesFromTargetPose( robObj, pose, DenHartParameters)
+function [ resultAngles, anglesSum, minAngles ] = TRSAnglesFromTargetPose( robObj, pose, DenHartParameters)
 % TRSAnglesFromTargetPose - calculates all possible angles to move from
 % the current pose to the given pose and outputs these angles as well 
 % as the sum of angles for each movement so that the user can choose 
@@ -109,7 +109,15 @@ else
                 end
             end
         end
-        clear i j;    
+        clear i j;        
+        
+        %% Choose the minimal angles from the possible
+        indexMin = find(anglesSum==min(anglesSum));
+        minAngles = resultAngles(indexMin,:);
+        
     end
 end
+
+
+
 end
