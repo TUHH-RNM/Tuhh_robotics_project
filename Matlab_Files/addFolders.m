@@ -1,4 +1,7 @@
 %% Add folders
+% path = pwd;
+% addpath(genpath(pwd));
+
 addpath('ALG');
 addpath('Calibration');
 addpath('COL');

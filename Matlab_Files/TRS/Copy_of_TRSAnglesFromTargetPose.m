@@ -1,5 +1,5 @@
-function [ resultAngles, anglesSum ] = TRSGoToPoseAlternatives( robObj, pose, DenHartParameters)
-% TRSGoToPoseAlternatives - calculates all possible angles to move from
+function [ resultAngles, anglesSum ] = TRSAnglesFromTargetPose( robObj, pose, DenHartParameters)
+% TRSAnglesFromTargetPose - calculates all possible angles to move from
 % the current pose to the given pose and outputs these angles as well 
 % as the sum of angles for each movement so that the user can choose 
 % which joints movement he wants to choose 
@@ -7,7 +7,7 @@ function [ resultAngles, anglesSum ] = TRSGoToPoseAlternatives( robObj, pose, De
 %   Info:
 %   Designed by:    Konstantin Stepanow
 %   Date created:   12.07.2016
-%   Last modified:  12.07.2016
+%   Last modified:  13.07.2016
 %   Change Log:
 
 %% Calculate the inverse kinematics

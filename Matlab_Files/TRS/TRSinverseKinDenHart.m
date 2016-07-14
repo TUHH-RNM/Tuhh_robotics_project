@@ -10,7 +10,7 @@ function [ angles ] = TRSinverseKinDenHart( DHmatrix, DHparameters, config)
 %   Change Log:
 
 configSplit = strsplit(config);
-angles = [NaN NaN NaN NaN NaN NaN];
+angles = [];
 
 %% Calculating the angles subsequently
 % There are eight different sets of angles to calculate the same endpose.
@@ -25,11 +25,7 @@ a3 = DHparameters(3,1);
 p05 = DHmatrix*[0 0 -d6 1]' - [0 0 0 1]';
 x05 = p05(1,1);
 y05 = p05(2,1);
-if isreal(x05) && isreal(y05) 
-    psi = atan2(y05,x05);
-else
-    psi = NaN;
-end
+psi = atan2(y05,x05);
 phi1 = acos(d4/sqrt(x05*x05+y05*y05));
 phi2 = -phi1;
 theta1Pos = psi + phi1 + pi/2;
@@ -68,15 +64,14 @@ T16 = T01Inv*DHmatrix;
 T61 = TRSinvertTransformationMatrix(T16);
 zx = T61(1,3);
 zy = T61(2,3);
-if isreal(zx) && isreal(zy) 
+if isreal(zx) && isreal(zy)
     theta6 = atan2(-zy/sin(theta5), zx/sin(theta5));
 else
-    theta6 = NaN;
+    theta6 = 1i;
 end
 angles(6) = theta6;
 
 %% theta 3
-theta5 = angles(5);
 theta6 = angles(6);
 T45 = TRSforwardKinDenHart(DHparameters(5,:), theta5);
 T56 = TRSforwardKinDenHart(DHparameters(6,:), theta6);
@@ -98,10 +93,10 @@ theta3 = angles(3);
 p13 = T14*[0 -d4 0 1]' - [0 0 0 1]';
 p13x = p13(1,1);
 p13y = p13(2,1);
-if isreal(p13x) && isreal(p13y) 
+if isreal(p13x) && isreal(p13y)
     theta2 = -atan2(p13y,-p13x) + asin(a3*sin(theta3)/sqrt(p13'*p13));
 else
-    theta2 = NaN;
+    theta2 = 1i;
 end
 angles(2) = theta2;
 
@@ -112,11 +107,11 @@ T23 = TRSforwardKinDenHart(DHparameters(3,:), theta3);
 T31 = TRSinvertTransformationMatrix(T12*T23);
 T34 = T31*T14;
 xx = T34(1,1);
-xy = T34(2,1); 
-if isreal(xx) && isreal(xy) 
+xy = T34(2,1);
+if isreal(xx) && isreal(xy)
     theta4 = atan2(xy,xx);
 else
-    theta4 = NaN;
+    theta4 = 1i;
 end
 angles(4) = theta4;
 
@@ -125,7 +120,7 @@ angles = round(angles*360/(2*pi),2);
 
 if isreal(angles)
 else
-    angles = [NaN NaN NaN NaN NaN NaN];
+    angles = [];
 end
 
 end
