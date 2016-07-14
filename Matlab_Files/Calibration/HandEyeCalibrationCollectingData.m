@@ -107,10 +107,12 @@ for j=1:measurements
     newPose = initialPose*randomTransformation;
     
     % Let the robot go to the new random pose
-    row1 = num2str(newPose(1,:));
-    row2 = num2str(newPose(2,:));
-    row3 = num2str(newPose(3,:));
-    command = ['MoveMinChangeRowWiseStatus ' row1 row2 row3 initialConfig];
+%     row1 = num2str(newPose(1,:));
+%     row2 = num2str(newPose(2,:));
+%     row3 = num2str(newPose(3,:));
+%     command = ['MoveMinChangeRowWiseStatus ' row1 row2 row3 initialConfig];
+    [~,~, minAngles ] = TRSAnglesFromTargetPose( robObj, newPos, DenHartParameters);
+    command = ['MovePTPJoints ',num2str(minAngles)];
     UR5sendCommand(robObj,command);
     % Wait until the joints don't change anymore (robot arrived)
     temp2 = [0 0 0 0 0 0];
