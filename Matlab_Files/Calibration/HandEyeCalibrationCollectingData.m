@@ -131,17 +131,17 @@ for j=1:measurements
     
     % Track the pose, if the markers are not visible, fill the matrix
     % with NaN, otherwise save the robot pose and the tracked pose
-    [T,visibility,~] = trackObj.getTransformMatrix;
+    [~,visibility,~] = trackObj.getTransformMatrix();
     if ~visibility
         randomPose(:,:,j) = NaN*ones(4);
         trackedPose(:,:,j) = NaN*ones(4);
     else
+        [T,~] = trackObj.getNTransformsReliable(10);
         randomPose(:,:,j) = UR5getPositionHomRowWise(robObj);
         % UR5getPositionHomRomWise gives out the position ( the first 3
         % elements of the 4th column ) in meters, but in this case we need
         % it in millimeters
         randomPose(1:3,4,j) = randomPose(1:3,4,j)*1000;
-        trackedPose(:,:,j) = T;
+        trackedPose(:,:,j) = T(:,:,end);
     end
-    
 end
