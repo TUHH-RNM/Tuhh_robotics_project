@@ -23,14 +23,14 @@ trackObjCoil = GetTrackingObject('coil');
 %% Hand-Eye Calibration
 % Load the necessary Denavit-Hartenberg parameters from the mat-file
 load('DenHartParametersUR3');
-[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 70,'maxRotAngle',30,'maxXYZtrans',100);
+[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 40,'maxRotAngle',50,'maxXYZtrans',150);
 [X,Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);
 
 fprintf('Number of valid measurements %d\n',nnz(~isnan(randomPose(1,1,:))));
 
 %% Compute the maximum error 
 errorMax = 0;
-for i=1:70
+for i=1:40
     E = (randomPose(:,:,i)*X/trackedPose(:,:,i))/Y;
     if errorMax < sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2) && ~isnan(E(1,1));
         errorMax = sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2);
