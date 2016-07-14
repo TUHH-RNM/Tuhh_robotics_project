@@ -37,18 +37,20 @@ end
 clear i j k l m n conf1 conf2 conf3;
 
 %% Tell the user you couldnt find any angles
-if isempty(possibleAnglesGeneral)
-     % msgbox('Not proper angles found! Try again!');
-     resultAngles = [];
-     anglesSum = [];    
+if isempty(possibleAnglesGeneral) 
+    resultAngles = [];
+    anglesSum = [];
+    msg = 'Impossible pose';
+    error(msg);           
 else
     %% Check for max joints violation
     possibleAngles = TRScheckForMaxJointsViolation( robObj, possibleAnglesGeneral );
     
     if isempty(possibleAngles)
         resultAngles = [];
-        anglesSum = []; 
-        % msgbox('Not more proper angles after violation check!');
+        anglesSum = [];
+        msg = 'Impossible pose with these joints constraints!';
+        error(msg);        
     else    
         %% Calculate the 360 degree rotated angles to the possible angles
         dimensions = size(possibleAngles);

@@ -30,7 +30,6 @@ end
 clear i;
 movementStatus = TRSGoToPoseMinAngles( robObj, poseRandom, DenHartParameters );
 
-
 %% Get the server angles
 anglesFromServer = round(UR5getPositionJoints(robObj),2);
 
@@ -42,9 +41,12 @@ for i=1:6
 end
 clear i;
 
+% Query the initial configuration
+initialConfig = UR5sendCommand(robObj,'GetStatus');
+
 %% Calculate the rotation matrix from the random angles
-anglePM = 45;
-XYZtransPM = 400;
+anglePM = 30;
+XYZtransPM = 200;
 randomRot = randomRotations(1,-anglePM,anglePM,-anglePM,anglePM,-anglePM,anglePM);
 randomRot = randomRot{1};
 
@@ -64,10 +66,19 @@ randomTransformation(4,1:4) = [0 0 0 1];
 newPose = initialPose*randomTransformation;
 
 % Move
+clc;
 movementStatus = TRSGoToPoseMinAngles( robObj, newPose, DenHartParameters );
 
+%% Let the robot go to the new random pose
+row1 = num2str(newPose(1,:));
+row2 = num2str(newPose(2,:));
+row3 = num2str(newPose(3,:));
+command = ['MoveMinChangeRowWiseStatus' ' ' row1 ' ' row2 ' ' row3 ' ' initialConfig];
+UR5sendCommand(robObj,command);
+
 % clear the unnecessary stuff
-clear anglePM XYZtransPM xRand yRand zRand randomRot
+clear anglePM XYZtransPM xRand yRand zRand randomRot row1 row2 row3
+
 
 %% Calculate the best solution for the movement to poseRandom
 [possibleAngles, rotSum] = TRSAnglesFromTargetPose(robObj, newPose, DenHartParameters);
@@ -84,6 +95,20 @@ UR5movePTPJoints(robObj,[360 0 0 0 0 0]);
 %% clear all variables except ... 
 clearvars -except robObj DenHartParameters;
 clc;
+
+%%
+k=1;
+for i=1:8
+    for j=1:6
+        if possibleAngles(i,j) < thMin(j) || possibleAngles(i,j) > thMax(j)
+            bad(k,1) = i;
+            bad(k,2) = j;
+            k=k+1;
+            break;
+        end
+    end
+end
+
 
 %% Get the maximum joint changes
 maxJointsChange = UR5getJointsMaxChange(robObj);
