@@ -23,20 +23,24 @@ trackObjCoil = GetTrackingObject('coil');
 %% Hand-Eye Calibration
 % Load the necessary Denavit-Hartenberg parameters from the mat-file
 load('DenHartParametersUR3');
-[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, 40, 40,'maxRotAngle',50,'maxXYZtrans',150);
+measurements = 70;
+speed = 40;
+[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, speed, measurements,'maxRotAngle',40,'maxXYZtrans',150);
+% Danger Digger! X und Y in millimeters NOT in meters 
 [X,Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);
-
+X(1:3,4) = X(1:3,4)*1000;
+Y(1:3,4) = Y(1:3,4)*1000;
 fprintf('Number of valid measurements %d\n',nnz(~isnan(randomPose(1,1,:))));
 
 %% Compute the maximum error 
 errorMax = 0;
-for i=1:40
-    E = (randomPose(:,:,i)*X/trackedPose(:,:,i))/Y;
-    if errorMax < sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2) && ~isnan(E(1,1));
-        errorMax = sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2);
+for i=1:measurements
+    if nnz(isnan(trackedPose(:,:,i))) == 0 && nnz(isnan(randomPose(:,:,i))) == 0
+        E = invertHTM(X)*invertHTM(randomPose(:,:,i))*Y*trackedPose(:,:,i);
+        errorMax = max(sqrt(E(1,4)^2 + E(2,4)^2 + E(3,4)^2),errorMax);
     end
 end
-fprintf('Maximum calibration error is %d\n',errorMax);
+fprintf('Maximum calibration error is %f\n',errorMax);
 
 %% Connect with the Tracking Server for head tracking
 trackObjHead = GetTrackingObject('head');

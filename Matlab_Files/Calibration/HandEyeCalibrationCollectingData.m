@@ -84,6 +84,7 @@ trackedPose = zeros(4,4,1);
 % randomConfig = cellstr('');
 
 %% Calculate new random poses and bring the robot there
+differenceVector
 for j=1:measurements
     
     % Calculate the rotation matrix from the random angles
@@ -111,7 +112,6 @@ for j=1:measurements
     row3 = num2str(newPose(3,:));
     command = ['MoveMinChangeRowWiseStatus ' row1 row2 row3 initialConfig];
     UR5sendCommand(robObj,command);
-    
     % Wait until the joints don't change anymore (robot arrived)
     temp2 = [0 0 0 0 0 0];
     while 1

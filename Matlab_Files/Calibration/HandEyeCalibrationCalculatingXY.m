@@ -49,12 +49,21 @@ numberN = nnz(correctIndices); %#ok<NASGU>
 A = zeros(12,24);
 b = zeros(12,1);
 
+N(1:3,4,:) = N(1:3,4,:)/1000;
+M(1:3,4,:) = M(1:3,4,:)/1000;
 for i=1:numberM
     
+    
+    
     % Exctracting the ith-matrix from the array
-    Ni = inv(N(:,:,i));
+    Ni = N(:,:,i);
     Mi = M(:,:,i);
-
+    
+    Ni(1:3,4) = Ni(1:3,4);
+    Mi(1:3,4) = Mi(1:3,4);
+    
+    Ni = inv(Ni);
+    
     % Rotation matrix of Mi(needed later)
     RMi = Mi(1:3,1:3);
 
@@ -81,42 +90,47 @@ w = A\b;
 %% Forming the X and Y matrices from the solution vector (only rotation)
 % XRot = [w(1:3) w(4:6) w(7:9)]; % not orthogonal version is not used
 YRot = [w(13:15) w(16:18) w(19:21)];
-XRotOrthArray = zeros(3,3,1);
-YRotOrthArray = zeros(3,3,1);
+Y = [w(13:15) w(16:18) w(19:21) w(22:24); [0 0 0 1]];
+XOrthArray = zeros(4,4,numberN);
+YOrthArray = zeros(4,4,numberN);
 
 %% Orthogonalizing the X and Y rotation matrices
 for i=1:numberM
     Mi = M(:,:,i);
     Ni = N(:,:,i);
-    MiRot = Mi(1:3,1:3);
-    NiRot = Ni(1:3,1:3);
-
-    [U,S,V] = svd(YRot*NiRot);
-    YNiRotOrth = U*V';  
-    YRotOrth = YNiRotOrth*NiRot';
-    XRotOrth = MiRot'*YRotOrth*NiRot;   
+%    MiRot = Mi(1:3,1:3);
+%     NiRot = Ni(1:3,1:3);
+    YNi = Y*Ni;
+    [U,~,V] = svd(YNi(1:3,1:3));
+    YNiRotOrth = U*V'; 
     
-    XRotOrthArray(:,:,i) = XRotOrth;
-    YRotOrthArray(:,:,i) = YRotOrth;   
+%     YRotOrth = YNiRotOrth*NiRot';
+%     XRotOrth = MiRot'*YRotOrth*NiRot;   
+%     
+%     XRotOrthArray(:,:,i) = XRotOrth;
+%     YRotOrthArray(:,:,i) = YRotOrth;   
+
+    YNiOrth = [YNiRotOrth, YNi(1:3,4); [0 0 0 1]];
+    YOrth = YNiOrth*invertHTM(Ni);
+    XOrth = invertHTM(Mi)*YNiOrth;
+    
+    XOrthArray(:,:,i) = XOrth;
+    YOrthArray(:,:,i) = YOrth;   
+
 end
 
 %% Averaging the orthonormalized rotation matrices
 % another averaging approach could be used
-sumRotX = zeros(3,3);
-sumRotY = zeros(3,3);
+sumX = zeros(4,4);
+sumY = zeros(4,4);
 for i=1:numberM    
-    sumRotX = sumRotX + XRotOrthArray(:,:,i);
-    sumRotY = sumRotY + YRotOrthArray(:,:,i);
+    sumX = sumX + XOrthArray(:,:,i);
+    sumY = sumY + YOrthArray(:,:,i);
 end
-averageRotX = sumRotX/numberM;
-averageRotY = sumRotY/numberM;
+averageX = sumX/numberM;
+averageY = sumY/numberM;
 
 %% Forming the X and Y matrices from the averaged rotation matrices
-% and the solution vector w where the translations are saved as well  
-XTranslation = w(10:12);
-X = [averageRotX XTranslation];
-X(4,:) = [0 0 0 1];
-
-YTranslation = w(22:24);
-Y = [averageRotY YTranslation];
-Y(4,:) = [0 0 0 1];
+% and the solution vector w where the translations are saved as well 
+X = averageX;
+Y = averageY;
