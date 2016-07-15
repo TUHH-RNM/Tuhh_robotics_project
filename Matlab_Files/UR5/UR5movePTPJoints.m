@@ -1,5 +1,5 @@
 function [ out ] = UR5movePTPJoints(obj, matJoints )
-%UR5movePTPJoints(obj, matJoints ) - Moves the robot in PTP-mode to a new joint position
+% UR5movePTPJoints(obj, matJoints ) - Moves the robot in PTP-mode to a new joint position
 %
 %   Info:
 %   Designed by:    Mirko Schimkat

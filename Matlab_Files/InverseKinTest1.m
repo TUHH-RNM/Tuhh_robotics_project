@@ -45,13 +45,13 @@ for i=1:6
 end
 clear i;
 
-%%
-
-% UR5sendCommand(robObj,'EnableAlter');
-UR5sendCommand(robObj,'DisableAlter');
-
-UR5sendCommand(robObj,'EnableAlter');
-
+%% Activate/Deactivate RT-mode
+RTmodeFlag = true;
+if RTmodeFlag
+    UR5sendCommand(robObj,'EnableAlter');
+else
+    UR5sendCommand(robObj,'DisableAlter');
+end
 
 %% Calculate the rotation matrix from the random angles
 anglesBegin = round(UR5getPositionJoints(robObj),2);
@@ -68,11 +68,12 @@ newPose = initialPose*randomTransformation;
 clc;
 [ resultAngles, anglesSum, minAngles ]  = TRSAnglesFromTargetPose( robObj, newPose, DenHartParameters);
 
-UR5movePTPJoints(robObj, minAngles);
-%UR5moveRTJoints(robObj, minAngles);
-
-% UR5movePTPJoints(robObj, minAngles);
-UR5moveRTJoints(robObj, minAngles);
+% Move the robot in RT or PTP-mode
+if RTmodeFlag
+    UR5moveRTJoints(robObj, minAngles);
+else
+    UR5movePTPJoints(robObj, minAngles);
+end
 
 clear anglePM XYZtransPM randomRot xRand yRand zRand randomTransformation ans;
 
