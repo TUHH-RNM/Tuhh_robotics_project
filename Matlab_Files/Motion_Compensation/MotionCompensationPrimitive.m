@@ -1,4 +1,4 @@
-function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,rtFlag,varargin)
+function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,varargin)
 % MOTIONCOMPENSATIONPRIMITIVE moves the robot such that T_C_H_des is the HMT from head to coil
 %
 %   
@@ -10,21 +10,46 @@ function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,camFlag,rtFl
 %   Designed by:    Nasser Attar
 %   Date created:   30.06.2016
 %   Last modified:  30.06.2016
-%   Change Log:     
+%   Change Log:    
 
+rtMode = false;
+camFlag = 'atrcsys';
+headFrame = false;
+for i = 1:numel(varargin)
+    if strcmp(varargin{i},'rtMode')
+        rtMode = true;
+    elseif strcmp(varargin{i},'kinect')
+        camFlag = 'kinect';
+    elseif strcmp(varargin{i},'headFrame')
+        headFrame = true;
+    end
+end
 % Get the HMT from the Head to the Camera
 if strcmp(camFlag,'kinect')
-    [T_TS_H,visibility] = KINECT_getMarkerFrameHTM(cameraObj,'headFrame');
+    [T_TS_H,visibility] = KINECT_getMarkerFrameHTM(cameraObj);
 elseif strcmp(camFlag,'atrcsys')
     [T_TS_H,visibility,~] = cameraObj.getTransformMatrix();
+else
+    error('No such camera existent')
 end
 if ~visibility
     warning('Head is not visible\n')
     return
 end
- Z = Y*T_TS_H*invertHTM(T_C_H_des);
+
+% Ouput the HTM from the head frame (according to the MEG/EEG
+% convention) to the Kinect frame
+if headFrame
+    T_H_M = [0.004056364482707 -0.967455059014186 -0.253010702621596 -54.756751128760129;
+             0.956482476316876 -0.070067530666923 0.283252915519113 -76.092549496522793;
+            -0.291762597549653 -0.243150168484619 0.925069089991579 80.697550637454697;
+             0 0 0 1];
+    T_TS_H = T_TS_H*invertHTM(T_H_M);     
+end
+
 % Get the target HMT from Endeffector to Base to achieve the desired HMT
 % from Head to camera (T_C_H_des)
+Z = Y*T_TS_H*invertHTM(T_C_H_des);
 T_B_E_des = Z*invertHTM(X);
 
 row1 = num2str(T_B_E_des(1,:));
@@ -33,11 +58,16 @@ row3 = num2str(T_B_E_des(3,:));
 
 % Move robot to the desired pose. This moving should be done with a function 
 % which also features collision detection
-if rtFlag
+if rtMode
     command = ['MoveRTHomRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
 else
     command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
 end
+
+% Give the robot a little break
+pause(0.02);
+% Do the movement
+
 output = UR5sendCommand(robObj,command);
 if ~strfind(output,'true')
     warning('\nMotion Compensation was not successful\n')

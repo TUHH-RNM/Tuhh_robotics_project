@@ -2,9 +2,15 @@ function [ out ] = UR5moveRTJoints(obj, matJoints )
 % UR5moveRTJoints(obj, matJoints ) - Moves the robot in PTP-mode to a new joint position
 %
 %   Info:
+
 %   Designed by:    Konstantin Stepanow
 %   Date created:   14.05.2016
 %   Last modified:  14.05.2016
+
+%   Designed by:    Mirko Schimkat
+%   Date created:   26.05.2016
+%   Last modified:  27.05.2016
+
 %   Change Log:
 
 %% Error handling
