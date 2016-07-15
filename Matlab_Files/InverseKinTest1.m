@@ -30,6 +30,10 @@ for i=1:6
 end
 clear i;
 
+%%
+% UR5sendCommand(robObj,'EnableAlter');
+UR5sendCommand(robObj,'DisableAlter');
+
 %% Calculate the rotation matrix from the random angles
 anglesBegin = round(UR5getPositionJoints(robObj),2);
 anglePM = 45;
@@ -45,6 +49,7 @@ newPose = initialPose*randomTransformation;
 clc;
 [ resultAngles, anglesSum, minAngles ]  = TRSAnglesFromTargetPose( robObj, newPose, DenHartParameters);
 UR5movePTPJoints(robObj, minAngles);
+%UR5moveRTJoints(robObj, minAngles);
 clear anglePM XYZtransPM randomRot xRand yRand zRand randomTransformation ans;
 
 pause(1);
