@@ -1,4 +1,4 @@
-function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,DenHartParam,varargin)
+function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_H_C_des,DenHartParam,varargin)
 % MOTIONCOMPENSATIONPRIMITIVE moves the robot such that T_C_H_des is the HMT from head to coil
 %
 %   
@@ -49,7 +49,8 @@ end
 
 % Get the target HMT from Endeffector to Base to achieve the desired HMT
 % from Head to camera (T_C_H_des)
-Z = Y*T_TS_H*invertHTM(T_C_H_des);
+% Z = Y*T_TS_H*invertHTM(T_C_H_des);
+Z = Y*T_TS_H*T_H_C_des;
 T_B_E_des = Z*invertHTM(X);
 
 % Move robot to the desired pose. This moving should be done with a function 
@@ -63,7 +64,7 @@ T_B_E_des = Z*invertHTM(X);
 % else
 %     command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
 % end
-
+T_B_E_des(1:3,4) = T_B_E_des(1:3,4)/1000;
 [~,~, minAngles ] = TRSAnglesFromTargetPose( robObj, T_B_E_des, DenHartParam);
 if rtMode
     command = ['MoveRTJoints ',num2str(minAngles)];
