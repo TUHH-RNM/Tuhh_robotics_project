@@ -1,4 +1,4 @@
-function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,varargin)
+function MotionCompensationPrimitive(robObj,cameraObj,X,Y,T_C_H_des,DenHartParam,varargin)
 % MOTIONCOMPENSATIONPRIMITIVE moves the robot such that T_C_H_des is the HMT from head to coil
 %
 %   
@@ -52,16 +52,14 @@ end
 Z = Y*T_TS_H*invertHTM(T_C_H_des);
 T_B_E_des = Z*invertHTM(X);
 
-row1 = num2str(T_B_E_des(1,:));
-row2 = num2str(T_B_E_des(2,:));
-row3 = num2str(T_B_E_des(3,:));
-
 % Move robot to the desired pose. This moving should be done with a function 
 % which also features collision detection
+T_B_E_des(1:3,4) = T_B_E_des(1:3,4)/1000;
+[ ~,~, minAngles ] = TRSAnglesFromTargetPose( robObj, T_B_E_des, DenHartParam);
 if rtMode
-    command = ['MoveRTHomRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
+    command = ['MoveRTJoints ',num2str(minAngles)];
 else
-    command = ['MoveMinChangeRowWiseStatus ' row1,' ',row2,' ',row3,' ','noToggleHand noToggleElbow noToggleArm'];
+    command = ['MovePTPJoints ', num2str(minAngles)];
 end
 
 % Give the robot a little break
