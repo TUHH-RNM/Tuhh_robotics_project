@@ -101,9 +101,8 @@ keep = true;
 %% Do the actual Motion Compensation
 while keep
     if useKinect
-        MotionCompensationPrimitive(robObj,kinObjHead,X,Y_K,T_H_C_des,DenHartParameters,mcOptions{:});
+        MotionCompensationPrimitive(robObj,kinObjHead,X,Y_K,T_C_H_des,DenHartParameters,mcOptions{:});
     else
-        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_H_C_des,DenHartParameters,mcOptions{:});
+        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,DenHartParameters,mcOptions{:});
     end
-%    pause(0.01)
 end

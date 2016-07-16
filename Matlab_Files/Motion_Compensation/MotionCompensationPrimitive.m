@@ -48,7 +48,7 @@ if headFrame
 end
 
 % Get the target HMT from Endeffector to Base to achieve the desired HMT
-% from Head to camera (T_C_H_des)
+% from Head to camera (T_H_C_des)
 % Z = Y*T_TS_H*invertHTM(T_C_H_des);
 Z = Y*T_TS_H*T_H_C_des;
 T_B_E_des = Z*invertHTM(X);
@@ -72,11 +72,7 @@ else
     command = ['MovePTPJoints ',num2str(minAngles)];
 end
 
-
-% Give the robot a little break
-% pause(0.02);
 % Do the movement
-
 output = UR5sendCommand(robObj,command);
 if ~strfind(output,'true')
     warning('\nMotion Compensation was not successful\n')
