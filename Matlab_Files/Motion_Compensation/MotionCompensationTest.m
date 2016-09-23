@@ -1,7 +1,7 @@
 %% Script for Motion Compensation
 
 % Cell array with options for the motion compensation function
-mcOptions = [];
+mcOptions = {'headFrame'};
 
 % Specify whether Kinect or Atrcsys should be used for tracking
 useKinect = 'Shall the Kinect be used?\nIf yes, enter a number above 0\n';
@@ -23,9 +23,9 @@ trackObjCoil = GetTrackingObject('coil');
 %% Hand-Eye Calibration
 % Load the necessary Denavit-Hartenberg parameters from the mat-file
 load('DenHartParametersUR3');
-measurements = 70;
+measurements = 40;
 speed = 40;
-[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, speed, measurements,'maxRotAngle',40,'maxXYZtrans',150);
+[randomPose,trackedPose] = HandEyeCalibrationCollectingData(robObj, trackObjCoil, DenHartParameters, speed, measurements,'maxRotAngle',30,'maxXYZtrans',50);
 % Danger Digger! X und Y in millimeters NOT in meters 
 [X,Y] = HandEyeCalibrationCalculatingXY(randomPose, trackedPose);
 X(1:3,4) = X(1:3,4)*1000;
@@ -65,28 +65,30 @@ end
 
 %% Specify the desired transformation from Head to Coil
 % Important !!! Bring the coil in the desired position relative to the coil
-if useKinect
-    [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kinObjHead);
-else
-    [T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
-end
-if ~visibility
-    warning('Head is not visible\n')
-end
-T_B_H = Y*T_TS_H;
+% if useKinect
+%     [T_TS_H,visibility] = KINECT_getMarkerFrameHMT(kinObjHead);
+% else
+%     [T_TS_H,visibility,~] = trackObjHead.getTransformMatrix();
+% end
+% if ~visibility
+%     warning('Head is not visible\n')
+% end
+% T_B_H = Y*T_TS_H;
+% 
+% T_B_E = UR5getPositionHomRowWise(robObj);
+% T_B_E(1:3,4) = T_B_E(1:3,4)*1000;
+% T_B_C = T_B_E*X;
+% T_C_H_des = invertHTM(T_B_C)*T_B_H;
 
-T_B_E = UR5getPositionHomRowWise(robObj);
-T_B_E(1:3,4) = T_B_E(1:3,4)*1000;
-T_B_C = T_B_E*X;
-T_C_H_des = invertHTM(T_B_C)*T_B_H;
-
-% % Demanded by the project task
+% Demanded by the project task
 % T_H_C_des = [0.868967 0.203085 -0.451281 48.631371;
 %              0.331437 -0.916017 0.225975 -85.534794;
 %              -0.367487 -0.345935 -0.863298 126.256582;
 %              0 0 0 1];
-% T_C_H_des = invertHTM(T_H_C_des);         
-
+T_H_C_des = [0.4962,    0.8380,   -0.2269,   39.4230;
+             0.8232,   -0.3711,    0.4296,  -88.1870;
+             0.2758,   -0.3999,   -0.8741,  118.9399;
+             0,         0,         0,    1.0000];
 %% (Optional) Activate Real time. Don't forget to announce it to the MC-function!!
 UR5sendCommand(robObj,'EnableAlter');
 mcOptions = [mcOptions,{'rtMode'}];
@@ -99,9 +101,8 @@ keep = true;
 %% Do the actual Motion Compensation
 while keep
     if useKinect
-        MotionCompensationPrimitive(robObj,kinObjHead,X,Y_K,T_C_H_des,mcOptions{:});
+        MotionCompensationPrimitive(robObj,kinObjHead,X,Y_K,T_C_H_des,DenHartParameters,mcOptions{:});
     else
-        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,mcOptions{:});
+        MotionCompensationPrimitive(robObj,trackObjHead,X,Y,T_C_H_des,DenHartParameters,mcOptions{:});
     end
-    pause(0.01)
 end

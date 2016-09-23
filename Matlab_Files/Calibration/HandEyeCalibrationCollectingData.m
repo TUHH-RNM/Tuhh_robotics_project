@@ -84,7 +84,6 @@ trackedPose = zeros(4,4,1);
 % randomConfig = cellstr('');
 
 %% Calculate new random poses and bring the robot there
-differenceVector
 for j=1:measurements
     
     % Calculate the rotation matrix from the random angles
@@ -104,13 +103,15 @@ for j=1:measurements
     randomTransformation(4,1:4) = [0 0 0 1];
     
     % Construct the new random pose
-    newPose = initialPose*randomTransformation;
-    
+    newPos = initialPose*randomTransformation;
+    newPos(1:3,4) = newPos(1:3,4)/1000;
     % Let the robot go to the new random pose
-    row1 = num2str(newPose(1,:));
-    row2 = num2str(newPose(2,:));
-    row3 = num2str(newPose(3,:));
-    command = ['MoveMinChangeRowWiseStatus ' row1 row2 row3 initialConfig];
+%     row1 = num2str(newPose(1,:));
+%     row2 = num2str(newPose(2,:));
+%     row3 = num2str(newPose(3,:));
+%     command = ['MoveMinChangeRowWiseStatus ' row1 row2 row3 initialConfig];
+    [~,~, minAngles ] = TRSAnglesFromTargetPose( robObj, newPos, DenHartParameters);
+    command = ['MovePTPJoints ',num2str(minAngles)];
     UR5sendCommand(robObj,command);
     % Wait until the joints don't change anymore (robot arrived)
     temp2 = [0 0 0 0 0 0];
