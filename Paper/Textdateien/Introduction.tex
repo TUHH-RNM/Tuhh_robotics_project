@@ -1,4 +1,20 @@
-In a number of medical applications it is necessary to place a medical device 
+\section{Introduction}
+% The very first letter is a 2 line initial drop letter followed
+% by the rest of the first word in caps.
+% 
+% form to use if the first word consists of a single letter:
+% \IEEEPARstart{A}{demo} file is ....
+% 
+% form to use if you need the single drop letter followed by
+% normal text (unknown if ever used by IEEE):
+% \IEEEPARstart{A}{}demo file is ....
+% 
+% Some journals put the first two words in caps:
+% \IEEEPARstart{T}{his demo} file is ....
+% 
+% Here we have the typical use of a "T" for an initial drop letter
+% and "HIS" in caps to complete the first word.
+\IEEEPARstart{I}{n} a number of medical applications it is necessary to place a medical device 
 next to a human patient in such way that the device keeps exactly a predetermined position and 
 orientation relative to the body of the patient. One example, is the placement of a radiation 
 coil in space, next to the head of a patient, such that it can radiates a specific part of 
@@ -11,10 +27,13 @@ movements the manipulator of the robot must execute to maintain the specified sp
 between the medical device and the patient. Then the PC sends movement commands to the robot 
 and the robot is reacting with a movement of his manipulator, which carries the medical 
 device. Of course, care must be taken that the robot or the device is not colliding with the 
-patient. To demonstrate the above explanations the scenario shown in [reference to {fig:scenario}] is considered.
-
-[Figure {fig:scenario}]
-
+patient. To demonstrate the above explanations the scenario shown in \figref{fig:scenario} is considered. 
+\begin{figure}
+\centering
+\input{Bilder/scenario.pdf_tex}
+\caption{Medical scenario, where the motion compensation method is used.}
+\label{fig:scenario}
+\end{figure}
 The robot and the tracking system are shown which have their own coordinate systems attached to them. In this scenario, the only important body part of the patient is his head. The coil, which is carried by the manipulator of the robot, shall keep a predetermined posture relative to the head. To express this posture, the head and the coil also have corresponding coordinate systems attached to them. Then the relative posture between them can be expressed with the homogeneous transformation matrix $^{\text{H}}T_{\text{C}}$. Analogously, the \textit{desired} posture between head and coil has the corresponding homogeneous transformation matrix $^{\text{H}}T_{\text{C,g}}$. The goal of the motion compensation method is to move the robot such that the relation
 \begin{align}
 ^{\text{H}}T_{\text{C}} = ^{\text{H}}T_{\text{C,g}}
@@ -22,4 +41,4 @@ The robot and the tracking system are shown which have their own coordinate syst
 \end{align}
 always holds. Of course, due to measurement errors of the tracking system and the finite precision of the robot, $^{\text{H}}T_{\text{C}}$ can only approximate $^{\text{H}}T_{\text{C,g}}$. The coordinate frames of the patient's head, tracking system, robot and coil
 have in each case a posture relative to the world coordinate frame, denoted by the axes triple
-$\left( x_{\text{W}},y_{\text{W}},z_{\text{W}} \right)$. The tracking system measures the relative postures of the head and the coil relative to the coordinate system of the tracking system $\left( x_{\text{S}},y_{\text{S}},z_{\text{S}} \right)$, in terms of the homogeneous transformation matrices $^{\text{S}}T_{\text{H}}$ and $^{\text{S}}T_{\text{C}}$. They serve as input for the PC, which processes them together with the posture of the tracking system and robot in the world coordinate system to output data for the robot. This data processing is done in \textsc{Matlab}. The robot will then, based on the output data from the PC, move its manipulator, such that \eqref{eq:desired_relation} is approximated as good as possible. 
+$\left( x_{\text{W}},y_{\text{W}},z_{\text{W}} \right)$. The tracking system measures the relative postures of the head and the coil relative to the coordinate system of the tracking system $\left( x_{\text{S}},y_{\text{S}},z_{\text{S}} \right)$, in terms of the homogeneous transformation matrices $^{\text{S}}T_{\text{H}}$ and $^{\text{S}}T_{\text{C}}$. They serve as input for the PC, which processes them together with the posture of the tracking system and robot in the world coordinate system to output data for the robot. This data processing is done in \textsc{Matlab}. The robot will then, based on the output data from the PC, move its manipulator, such that \eqref{eq:desired_relation} is approximated as good as possible.
