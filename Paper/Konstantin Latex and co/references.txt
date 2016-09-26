@@ -1,0 +1,9 @@
+ref1 http://www.elrotec.de/index.php/produkte/ur-roboter/vorteile-der-ur-roboter (23.09.2016 12:00))
+
+ref2 http://www.gebrauchtmaschinen-haba.com/userupload/editorupload/files/images/roboter%201.jpg (23.09.2016 14:32))
+
+ref3 http://www.zacobria.com/temp/ur5_dimensions.jpg  ((23.09.2016 14:32))
+
+ref4 inv_kin_keating_paper.pdf
+
+ref5 hand_eye_calibration_paper.pdf
