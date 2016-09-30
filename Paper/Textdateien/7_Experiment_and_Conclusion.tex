@@ -1,0 +1,30 @@
+\section{Experiment and Conclusion}
+An experiment is executed, as an indicator of the quality of the above presented motion compensation method. The setup of the experiment is shown in \figref{fig:experiment}.
+\begin{figure}
+\centering
+\input{Bilder/experiment.pdf_tex}
+\caption{Experimental setup for the validation of the motion compensation method.}
+\label{fig:experiment}
+\end{figure}
+The end-effector of the robot $U_{2}$ is holding a \textit{head phantom}. There are markers attached to this head phantom, such that the tracking system can determine its posture. The robot is a UR5-robot. The robot $U_{1}$ carries the coil with his end-effector and the relative transformation between head and coil is denoted by $^{\text{C}}T_{\text{H}}$. Note, that in this experiment the robot $U_{1}$ is a \textit{UR3-robot}, but this does merely alter the link lengths which have to be inserted into the forward and inverse kinematics. The kinematic structure of UR3 and UR5 are identical and this means that the motion compensation method is still valid. In the experiment, the robot $U_{2}$ is moving its end-effector on a trajectory, which is unknown, priorly. The motion compensation method is running and connected to robot $U_{1}$. It shall compensate the movements of the end-effector of $U_{2}$, such that \eqref{eq:desired_relation} holds. If the matrix $^{\text{C}}T_{\text{H}}$ is known, then also the homogeneous transformation matrix $^{E_{2}}T_{E_{1}}$ between the end-effectors of the two robots can be calculated. The end-effector of robot $U_{1}$ is denoted by $E_{1}$ and that of $U_{2}$ by $E_{2}$. This is possible, because during the hand-eye-calibration procedure of the two robots, also the homogeneous transformation matrices between the coil and $E_{1}$ and between the head phantom and $E_{2}$ are determined. Then the matrix $^{\text{C}}T_{\text{H,g}}$ has a corresponding homogeneous transformation matrix $^{E_{2}}T_{E_{1},\text{g}}$, which expresses the desired transformation between the two end-effectors. In the experiment it has the value
+\begin{align*}
+^{E_{2}}T_{E_{1},\text{g}} = 
+\begin{bmatrix}
+0.8725 & 0.159 & 0.4619 & 9.5626\\ 
+-0.4253 & -0.2179 & 0.8784 & -160.5035\\ 
+0.2404 & -0.9629 & -0.1225 & 412.4959\\ 
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{align*}
+There is a reason why, the transformation between the end-effectors is considered: During the experiment, rather than measuring $^{\text{C}}T_{\text{H}}$ and comparing it to $^{\text{C}}T_{\text{H,g}}$, the transformation $^{E_{2}}T_{E_{1}}$ is measured and compared to $^{E_{2}}T_{E_{1},\text{g}}$. The validation of the motion compensation method will be based on the deviation of $^{E_{2}}T_{E_{1}}$ from $^{E_{2}}T_{E_{1},\text{g}}$. There are multiple ways to define this deviation, but in this work it is defined as the Frobenius norm of the difference of $^{E_{2}}T_{E_{1}}$ and $^{E_{2}}T_{E_{1},\text{g}}$.
+\begin{align}
+d = \left \| {^{E_{2}}T_{E_{1},\text{g}}} - {^{E_{2}}T_{E_{1}}}  \right \|_{\text{F}}
+\end{align}
+The trajectory of $d(t)$ is shown in \figref{fig:deviation}.
+\begin{figure}[!t]
+\centering
+\includegraphics[width=3.5in]{deviation.png}
+\caption{Frobenius norm of the difference of $^{E_{2}}T_{E_{1}}$ and $^{E_{2}}T_{E_{1},\text{g}}$}
+\label{fig:deviation}
+\end{figure}
+As it can be seen, the deviation is not constant, but there are high peaks, which occur, when the movements of $U_{2}$ are done with higher velocity and higher position ranges. The motion compensation method generally suffers from the high computation times of \textsc{Matlab}. Therefore, the overall system has a low bandwidth and it appears a significant temporal gap between the beginning of the movements of $U_{2}$ and the beginning of the corresponding movement of $U_{1}$, which is supposed to compensate it. One possible countermeasure could be the implementation of the motion compensation method into a compiled programming language, such as C++, rather in a interpreted language as \textsc{Matlab}. 

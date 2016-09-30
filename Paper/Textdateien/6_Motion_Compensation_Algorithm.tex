@@ -1,0 +1,23 @@
+ \section{Motion Compensation Algorithm}
+The contents of the previous sections have been combined to generate a motion compensation algorithm, which is running in \textsc{Matlab}. This algorithm can be divided into two phases. The first phase is the \textit{initialization phase}. In this phase the following steps are executed.
+\begin{enumerate}
+\item Set up the interfaces between \textsc{Matlab} and the UR3-robot and between \textsc{Matlab} and the tracking system.
+\item Configure the parameters of the robot and of the tracking system
+\item Execute the hand-eye-calibration method to determine the homogeneous transformation matrix from the tracking system to the world frame, denoted with $Y$ and the homogeneous transformation matrix from the coil to the end-effector, denoted with $X$
+\end{enumerate}
+After the initialization phase the \textit{compensation phase} starts. This phase consists of an infinite while loop, where the following steps are executed, permanently:
+\begin{enumerate}
+\item Track the position of the fiducials, attached to the head, with the tracking system
+\item Use this data to determine $^{\text{S}}T_{\text{H}}$ (see \figref{fig:scenario}). This step is only necessary, if the KINECT is used
+\item Determine the posture of the end-effector relative to the robot's base, that the robot must attain, when the desired posture between coil and head should be maintained. The former is denoted by the homogeneous transformation matrix $Z$ and the latter by the homogeneous transformation matrix $^{\text{C}}T_{\text{H,g}}$
+\item Demand the actual $^{\text{B}}T_{\text{M}}$ from the driver program of the robot.
+\item If the deviation between $^{\text{B}}T_{\text{M}}$ and $Z$ is above a specific threshold, activate the path planning algorithm to determine a safe path to the desired posture in the operating space.
+\item Activate the inverse kinematics subroutine to translate this path into the corresponding one in the joint space.
+\item Move the robot to the desired posture.
+\item Go to 1)
+\end{enumerate}
+The homogeneous transformation matrix $Z$ is calculated with the formula
+\begin{align}
+Z = Y\ast{^{\text{S}}T_{\text{H}}}\ast{^{\text{H}}T_{\text{C,g}}}\ast X^{-1}
+\end{align} 
+Note, that in the current version of the motion compensation method the path planning algorithm from step 5 is not existent, yet. Instead, a joint configuration, which corresponds to $Z$, is calculated with the inverse kinematics subroutine and then, all joints variables are driven to their specified values on a point-to-point trajectory. Currently, there is also no collision detection enabled. However, the motion compensation algorithm can be augmented with these two features. 
